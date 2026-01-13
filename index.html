@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AIクエスト - if(塾) × if(Business)</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- LIFF SDK -->
+  <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+</head>
+<body>
+  <div id="game-container">
+
+    <!-- タイトル画面 -->
+    <div id="screen-title" class="screen active">
+      <div class="title-logo">
+        <img src="images/logo.png" alt="AIクエスト" class="logo-img">
+        <h1>AIクエスト</h1>
+        <p class="subtitle">〜AIの力で世界を救え〜</p>
+      </div>
+      <div class="title-description">
+        <p>「業務の闇」「学びの壁」に支配された世界...</p>
+        <p>AIの力を使いこなし、平和を取り戻せ！</p>
+      </div>
+      <button class="btn-primary btn-start" onclick="Game.startGame()">
+        冒険をはじめる
+      </button>
+      <p class="powered-by">Powered by if(塾) & if(Business)</p>
+    </div>
+
+    <!-- キャラクター選択画面 -->
+    <div id="screen-character" class="screen">
+      <h2>勇者を選べ</h2>
+      <p class="instruction">あなたはどちらの勇者？</p>
+
+      <div class="character-select">
+        <div class="character-card" onclick="Game.selectCharacter('student')">
+          <div class="character-image">
+            <img src="images/hero-student.png" alt="学生の勇者">
+          </div>
+          <h3>学生の勇者</h3>
+          <p>勉強の悩みや将来の不安と戦う</p>
+          <ul class="character-traits">
+            <li>好奇心が武器</li>
+            <li>成長の可能性∞</li>
+          </ul>
+        </div>
+
+        <div class="character-card" onclick="Game.selectCharacter('business')">
+          <div class="character-image">
+            <img src="images/hero-business.png" alt="起業家の勇者">
+          </div>
+          <h3>起業家の勇者</h3>
+          <p>業務の非効率や人手不足と戦う</p>
+          <ul class="character-traits">
+            <li>決断力が武器</li>
+            <li>ビジネスセンス◎</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- バトル画面 -->
+    <div id="screen-battle" class="screen">
+      <div class="battle-header">
+        <span class="stage-indicator">STAGE <span id="current-stage">1</span>/3</span>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="enemy-area">
+        <div class="enemy-container">
+          <img src="images/enemy-student-1.png" alt="敵" id="enemy-image" class="enemy-image">
+          <h3 id="enemy-name">勉強嫌いゴブリン</h3>
+          <p id="enemy-description" class="enemy-desc">「勉強なんてつまらない！」</p>
+          <div class="enemy-hp-bar">
+            <div class="enemy-hp-fill" id="enemy-hp-fill"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="battle-message" id="battle-message">
+        敵が現れた！どの武器で戦う？
+      </div>
+
+      <div class="weapon-select">
+        <h4>AI武器を選べ！</h4>
+        <div class="weapons">
+          <button class="weapon-btn" onclick="Game.attack('chatgpt')" id="weapon-chatgpt">
+            <div class="weapon-icon">⚔️</div>
+            <div class="weapon-name">ChatGPT剣</div>
+            <div class="weapon-desc">知識で斬る！</div>
+          </button>
+          <button class="weapon-btn" onclick="Game.attack('automation')" id="weapon-automation">
+            <div class="weapon-icon">🛡️</div>
+            <div class="weapon-name">自動化の盾</div>
+            <div class="weapon-desc">繰り返しを防ぐ！</div>
+          </button>
+          <button class="weapon-btn" onclick="Game.attack('image')" id="weapon-image">
+            <div class="weapon-icon">🏹</div>
+            <div class="weapon-name">画像生成の弓</div>
+            <div class="weapon-desc">創造力で射る！</div>
+          </button>
+        </div>
+        <div class="hint-box" id="hint-box">
+          <span class="hint-icon">💡</span>
+          <span id="hint-text">敵の弱点に合った武器を選ぶと大ダメージ！</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 攻撃結果画面 -->
+    <div id="screen-attack-result" class="screen">
+      <div class="result-container">
+        <div class="attack-effect" id="attack-effect">
+          <!-- 攻撃エフェクト -->
+        </div>
+        <h2 id="attack-result-title">効果抜群！</h2>
+        <p id="attack-result-message">ChatGPT剣が敵の弱点を突いた！</p>
+        <div class="damage-display" id="damage-display">
+          <span class="damage-number">-100</span>
+        </div>
+        <div class="ai-tip" id="ai-tip">
+          <h4>💡 AIの豆知識</h4>
+          <p id="ai-tip-text">ChatGPTは質問に答えるだけじゃない！文章作成、翻訳、プログラミングの手助けもできるよ！</p>
+        </div>
+        <button class="btn-primary" onclick="Game.nextAfterAttack()">次へ</button>
+      </div>
+    </div>
+
+    <!-- ステージクリア画面 -->
+    <div id="screen-stage-clear" class="screen">
+      <div class="clear-container">
+        <div class="clear-badge">
+          <span class="clear-text">STAGE CLEAR!</span>
+        </div>
+        <img src="images/enemy-student-1.png" alt="倒した敵" id="defeated-enemy-image" class="defeated-enemy">
+        <h2><span id="defeated-enemy-name">勉強嫌いゴブリン</span>を倒した！</h2>
+        <div class="reward-box">
+          <p>獲得スキル</p>
+          <div class="skill-badge" id="skill-badge">
+            <span class="skill-icon">📚</span>
+            <span class="skill-name" id="skill-name">学習効率化</span>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="Game.nextStage()">次のステージへ</button>
+      </div>
+    </div>
+
+    <!-- エンディング画面 -->
+    <div id="screen-ending" class="screen">
+      <div class="ending-container">
+        <div class="ending-header">
+          <h1>🎉 クエストクリア！ 🎉</h1>
+        </div>
+
+        <!-- お姫様セクション -->
+        <div class="princess-section">
+          <img src="images/princess.png" alt="お姫様" class="princess-image">
+          <div class="princess-speech">
+            <p id="princess-message">
+              勇者よ、よくぞ闇を払ってくれました！<br>
+              AIの力を使いこなすあなたなら、<br>
+              日々の生活をもっと豊かにできます。
+            </p>
+          </div>
+        </div>
+
+        <div class="result-card">
+          <div class="hero-result">
+            <img src="images/hero-student.png" alt="勇者" id="result-hero-image">
+            <h2 id="result-title">AI活用マスター</h2>
+          </div>
+
+          <div class="skills-earned">
+            <h3>獲得したスキル</h3>
+            <div class="skills-list" id="skills-list">
+              <!-- JSで生成 -->
+            </div>
+          </div>
+        </div>
+
+        <div class="present-box">
+          <h3>🎁 姫からの特典 🎁</h3>
+          <p id="present-description">クリア記念！初回相談が無料に！</p>
+          <div class="coupon-code" id="coupon-code">
+            AIQUEST2024
+          </div>
+          <p class="present-note">※相談申し込み時にこのコードをお伝えください</p>
+        </div>
+
+        <div class="princess-cta">
+          <p id="cta-message" class="princess-advice">
+            「もっとAIを学んで、生活を変えてみませんか？」
+          </p>
+          <button class="btn-primary btn-cta" id="btn-main-cta" onclick="Game.goToConsultation()">
+            無料で相談する
+          </button>
+          <button class="btn-secondary" onclick="Game.shareResult()">
+            結果をシェアする
+          </button>
+          <button class="btn-secondary" onclick="Game.restartGame()">
+            もう一度遊ぶ
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ローディング画面 -->
+    <div id="screen-loading" class="screen">
+      <div class="loading-container">
+        <div class="loading-spinner"></div>
+        <p>Loading...</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <circle cx="100" cy="100" r="90" fill="#9b59b6"/>
+  <circle cx="100" cy="70" r="35" fill="#ffd93d"/>
+  <rect x="65" y="110" width="70" height="60" rx="10" fill="#34495e"/>
+  <text x="100" y="190" text-anchor="middle" fill="white" font-size="14">起業家の勇者</text>
+</svg>

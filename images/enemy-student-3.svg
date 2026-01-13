@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
+  <ellipse cx="100" cy="100" rx="80" ry="70" fill="#e74c3c"/>
+  <polygon points="60,30 80,60 40,60" fill="#c0392b"/>
+  <polygon points="140,30 160,60 120,60" fill="#c0392b"/>
+  <circle cx="70" cy="90" r="18" fill="#f1c40f"/>
+  <circle cx="130" cy="90" r="18" fill="#f1c40f"/>
+  <circle cx="70" cy="90" r="10" fill="#2c3e50"/>
+  <circle cx="130" cy="90" r="10" fill="#2c3e50"/>
+  <path d="M60 130 Q100 160 140 130" stroke="#c0392b" stroke-width="8" fill="none"/>
+  <text x="100" y="190" text-anchor="middle" fill="#e74c3c" font-size="11" font-weight="bold">将来不安ドラゴン</text>
+</svg>
