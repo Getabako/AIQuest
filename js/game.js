@@ -4,7 +4,7 @@
  */
 
 // ========================================
-// LIFF設定（デプロイ後にIDを設定）
+// LIFF設定
 // ========================================
 const LIFF_ID = "2008882500-ZwUdPYOK";
 
@@ -12,28 +12,35 @@ const LIFF_ID = "2008882500-ZwUdPYOK";
 // ゲームデータ
 // ========================================
 const GameData = {
+  // プレイヤー初期HP
+  playerMaxHP: 100,
+
   // 学生ルートの敵
   studentEnemies: [
     {
       name: "勉強嫌いゴブリン",
-      description: "「勉強なんてつまらない！」",
+      description: "勉強なんてつまらない！",
       image: "images/enemy-student-1.png",
       weakness: "chatgpt",
-      hp: 100,
-      skill: { icon: "📚", name: "学習効率化" },
+      resist: "image",
+      hp: 80,
+      attack: 15,
+      skill: { icon: "fa-book", name: "学習効率化" },
       tips: {
-        chatgpt: "ChatGPTは分からないことを聞けば即座に教えてくれる！勉強の「つまらない」は「わからない」から来ることが多いんだ。",
+        chatgpt: "ChatGPTは分からないことを即座に教えてくれる！「つまらない」は「わからない」から来ることが多いんだ。",
         automation: "自動化ツールで宿題の単純作業を減らせば、考える時間が増えるね。",
         image: "画像生成AIで教科書の内容を図解すると、理解しやすくなるよ！"
       }
     },
     {
       name: "集中できない魔導士",
-      description: "「気が散って全然進まない...」",
+      description: "気が散って全然進まない...",
       image: "images/enemy-student-2.png",
       weakness: "automation",
-      hp: 100,
-      skill: { icon: "🎯", name: "集中力ブースト" },
+      resist: "chatgpt",
+      hp: 90,
+      attack: 18,
+      skill: { icon: "fa-crosshairs", name: "集中力ブースト" },
       tips: {
         chatgpt: "ChatGPTにタスクを整理してもらうと、何から手をつければいいか明確になるよ！",
         automation: "自動化で単純作業を減らせば、大事なことに集中できる時間が生まれる！",
@@ -42,11 +49,13 @@ const GameData = {
     },
     {
       name: "将来不安ドラゴン",
-      description: "「自分に何ができるかわからない...」",
+      description: "自分に何ができるかわからない...",
       image: "images/enemy-student-3.png",
       weakness: "image",
-      hp: 100,
-      skill: { icon: "🌟", name: "未来創造力" },
+      resist: "automation",
+      hp: 120,
+      attack: 22,
+      skill: { icon: "fa-star", name: "未来創造力" },
       tips: {
         chatgpt: "ChatGPTに将来の選択肢を聞いてみよう！知らなかった道が見つかるかも。",
         automation: "AIを使いこなせる人材は、これからの時代に超重要！今のうちに触れておこう。",
@@ -59,11 +68,13 @@ const GameData = {
   businessEnemies: [
     {
       name: "人手不足スライム",
-      description: "「人が足りない...でも雇う余裕もない...」",
+      description: "人が足りない...でも雇う余裕もない...",
       image: "images/enemy-business-1.png",
       weakness: "automation",
-      hp: 100,
-      skill: { icon: "⚡", name: "業務自動化" },
+      resist: "image",
+      hp: 85,
+      attack: 16,
+      skill: { icon: "fa-bolt", name: "業務自動化" },
       tips: {
         chatgpt: "ChatGPTでメール対応や書類作成を効率化！1人で2人分の仕事ができるようになる。",
         automation: "Make.comやZapierで作業を自動化すれば、人を雇わなくても業務が回る！",
@@ -72,11 +83,13 @@ const GameData = {
     },
     {
       name: "時間泥棒ゴースト",
-      description: "「毎日残業...でも仕事が終わらない...」",
+      description: "毎日残業...でも仕事が終わらない...",
       image: "images/enemy-business-2.png",
       weakness: "chatgpt",
-      hp: 100,
-      skill: { icon: "⏰", name: "時間創出術" },
+      resist: "automation",
+      hp: 95,
+      attack: 20,
+      skill: { icon: "fa-clock", name: "時間創出術" },
       tips: {
         chatgpt: "ChatGPTに議事録作成、メール文面、企画書のドラフトを任せれば、時間が大幅に短縮！",
         automation: "請求書発行、データ入力、レポート作成...自動化できる作業は思った以上に多い！",
@@ -85,15 +98,17 @@ const GameData = {
     },
     {
       name: "非効率キング",
-      description: "「やり方を変えたいけど、何から手をつければ...」",
+      description: "やり方を変えたいけど、何から手をつければ...",
       image: "images/enemy-business-3.png",
       weakness: "image",
-      hp: 100,
-      skill: { icon: "👑", name: "DX推進力" },
+      resist: "chatgpt",
+      hp: 130,
+      attack: 25,
+      skill: { icon: "fa-crown", name: "DX推進力" },
       tips: {
         chatgpt: "ChatGPTに業務フローを説明して改善案をもらおう！客観的な視点が得られる。",
         automation: "まずは小さな自動化から！成功体験を積み重ねることが大切。",
-        image: "新しい業務フローを画像生成AIで可視化！チームへの説明もスムーズに。AIで「見える化」すれば、変革への抵抗も減らせる！"
+        image: "新しい業務フローを画像生成AIで可視化！チームへの説明もスムーズに。"
       }
     }
   ],
@@ -102,24 +117,27 @@ const GameData = {
   weapons: {
     chatgpt: {
       name: "ChatGPT剣",
-      icon: "⚔️",
-      effectiveText: "知識の刃が敵を切り裂いた！",
-      normalText: "ChatGPT剣で攻撃！",
-      weakText: "効果はいまひとつ..."
+      icon: "fa-sword",
+      baseDamage: 30,
+      effectiveMultiplier: 2.0,
+      normalMultiplier: 1.0,
+      weakMultiplier: 0.5
     },
     automation: {
       name: "自動化の盾",
-      icon: "🛡️",
-      effectiveText: "自動化の力で敵を押し返した！",
-      normalText: "自動化の盾で防御しながら攻撃！",
-      weakText: "効果はいまひとつ..."
+      icon: "fa-shield-halved",
+      baseDamage: 25,
+      effectiveMultiplier: 2.0,
+      normalMultiplier: 1.0,
+      weakMultiplier: 0.5
     },
     image: {
       name: "画像生成の弓",
-      icon: "🏹",
-      effectiveText: "創造の矢が敵の急所を射抜いた！",
-      normalText: "画像生成の弓で攻撃！",
-      weakText: "効果はいまひとつ..."
+      icon: "fa-bow-arrow",
+      baseDamage: 28,
+      effectiveMultiplier: 2.0,
+      normalMultiplier: 1.0,
+      weakMultiplier: 0.5
     }
   },
 
@@ -143,7 +161,7 @@ const GameData = {
       ctaText: "教育相談をする",
       ctaMessage: "教育の相談",
       princessMessage: "勇者よ、よくぞ学びの壁を打ち破りました！<br>AIを味方につければ、勉強も夢への挑戦も<br>もっと楽しくなりますよ。<br><br>if(塾)で、あなただけの学び方を<br>一緒に見つけてみませんか？",
-      ctaAdvice: "「AIと一緒に、好きを伸ばしてみませんか？」"
+      ctaAdvice: "AIと一緒に、好きを伸ばしてみませんか？"
     },
     business: {
       description: "AI導入診断＆Zoom相談が無料！",
@@ -151,7 +169,21 @@ const GameData = {
       ctaText: "ビジネス相談をする",
       ctaMessage: "ビジネス相談",
       princessMessage: "勇者よ、見事に業務の闇を払いました！<br>AIの力で、あなたのビジネスは<br>もっと効率的に、もっと自由になれます。<br><br>if(Business)で、御社に合った<br>AI活用法をご提案させてください。",
-      ctaAdvice: "「AIで、働き方を変えてみませんか？」"
+      ctaAdvice: "AIで、働き方を変えてみませんか？"
+    }
+  },
+
+  // ゲームオーバー時のメッセージ
+  gameOver: {
+    student: {
+      message: "まだAIの力を使いこなせていないようだ...<br>でも大丈夫！if(塾)で学べば、<br>次は必ず勝てるようになる！",
+      ctaText: "if(塾)で学ぶ",
+      ctaMessage: "教育の相談"
+    },
+    business: {
+      message: "業務の闘いは厳しかった...<br>でも心配無用！if(Business)のサポートで、<br>AIを味方につけよう！",
+      ctaText: "相談してみる",
+      ctaMessage: "ビジネス相談"
     }
   }
 };
@@ -160,12 +192,16 @@ const GameData = {
 // ゲーム状態
 // ========================================
 const GameState = {
-  character: null,     // 'student' or 'business'
+  character: null,
   currentStage: 1,
   enemies: [],
   currentEnemy: null,
+  currentEnemyHP: 0,
+  playerHP: 100,
+  playerMaxHP: 100,
   earnedSkills: [],
   lastAttack: null,
+  isPlayerTurn: true,
   liffInitialized: false,
   userId: null
 };
@@ -177,19 +213,15 @@ const Game = {
   // 初期化
   init: async function() {
     try {
-      // LIFF初期化
       await liff.init({ liffId: LIFF_ID });
       GameState.liffInitialized = true;
-
       if (liff.isLoggedIn()) {
         const profile = await liff.getProfile();
         GameState.userId = profile.userId;
       }
     } catch (error) {
-      console.log("LIFF init error (running outside LINE):", error);
-      // LINE外でもゲームは動作可能
+      console.log("LIFF init error:", error);
     }
-
     this.showScreen('title');
   },
 
@@ -214,12 +246,13 @@ const Game = {
     GameState.character = type;
     GameState.currentStage = 1;
     GameState.earnedSkills = [];
+    GameState.playerHP = GameData.playerMaxHP;
+    GameState.playerMaxHP = GameData.playerMaxHP;
 
-    // 敵をセット
     if (type === 'student') {
-      GameState.enemies = [...GameData.studentEnemies];
+      GameState.enemies = JSON.parse(JSON.stringify(GameData.studentEnemies));
     } else {
-      GameState.enemies = [...GameData.businessEnemies];
+      GameState.enemies = JSON.parse(JSON.stringify(GameData.businessEnemies));
     }
 
     this.startBattle();
@@ -228,6 +261,8 @@ const Game = {
   // バトル開始
   startBattle: function() {
     GameState.currentEnemy = GameState.enemies[GameState.currentStage - 1];
+    GameState.currentEnemyHP = GameState.currentEnemy.hp;
+    GameState.isPlayerTurn = true;
 
     // UI更新
     document.getElementById('current-stage').textContent = GameState.currentStage;
@@ -236,78 +271,160 @@ const Game = {
     document.getElementById('enemy-image').src = GameState.currentEnemy.image;
     document.getElementById('enemy-name').textContent = GameState.currentEnemy.name;
     document.getElementById('enemy-description').textContent = GameState.currentEnemy.description;
-    document.getElementById('enemy-hp-fill').style.width = '100%';
 
-    document.getElementById('battle-message').textContent = `${GameState.currentEnemy.name}が現れた！どの武器で戦う？`;
-
-    // ヒント更新（弱点のヒント）
-    const hints = {
-      chatgpt: "この敵は「知識」で解決できそうだ...",
-      automation: "この敵は「自動化」で対処できそうだ...",
-      image: "この敵は「創造力」で倒せそうだ..."
-    };
-    document.getElementById('hint-text').textContent = hints[GameState.currentEnemy.weakness];
+    this.updateHPBars();
+    this.updateBattleMessage(`${GameState.currentEnemy.name}が現れた！`);
+    this.enableWeapons(true);
 
     this.showScreen('battle');
   },
 
-  // 攻撃
+  // HPバー更新
+  updateHPBars: function() {
+    const enemyHPPercent = (GameState.currentEnemyHP / GameState.currentEnemy.hp) * 100;
+    const playerHPPercent = (GameState.playerHP / GameState.playerMaxHP) * 100;
+
+    document.getElementById('enemy-hp-fill').style.width = `${Math.max(0, enemyHPPercent)}%`;
+
+    document.getElementById('player-hp-fill').style.width = `${Math.max(0, playerHPPercent)}%`;
+    document.getElementById('player-hp-current').textContent = Math.max(0, GameState.playerHP);
+    document.getElementById('player-hp-max').textContent = GameState.playerMaxHP;
+
+    // HPバーの色を変更（危険時は赤く）
+    const playerHPBar = document.getElementById('player-hp-fill');
+    if (playerHPPercent <= 25) {
+      playerHPBar.classList.add('danger');
+    } else {
+      playerHPBar.classList.remove('danger');
+    }
+  },
+
+  // バトルメッセージ更新
+  updateBattleMessage: function(message) {
+    document.getElementById('battle-message').innerHTML = message;
+  },
+
+  // 武器ボタンの有効/無効
+  enableWeapons: function(enable) {
+    document.querySelectorAll('.weapon-btn').forEach(btn => {
+      btn.disabled = !enable;
+      if (enable) {
+        btn.classList.remove('disabled');
+      } else {
+        btn.classList.add('disabled');
+      }
+    });
+  },
+
+  // プレイヤー攻撃
   attack: function(weaponType) {
+    if (!GameState.isPlayerTurn) return;
+
+    this.enableWeapons(false);
+    GameState.isPlayerTurn = false;
+
     const enemy = GameState.currentEnemy;
     const weapon = GameData.weapons[weaponType];
-    const isEffective = enemy.weakness === weaponType;
 
-    GameState.lastAttack = {
-      weapon: weaponType,
-      isEffective: isEffective
-    };
+    let multiplier = weapon.normalMultiplier;
+    let effectiveness = 'normal';
 
-    // エフェクト設定
-    const effectEmojis = {
-      chatgpt: "⚔️💥",
-      automation: "🛡️✨",
-      image: "🏹🎯"
-    };
-
-    document.getElementById('attack-effect').textContent = effectEmojis[weaponType];
-
-    // 結果テキスト
-    const resultTitle = document.getElementById('attack-result-title');
-    const resultMessage = document.getElementById('attack-result-message');
-    const damageDisplay = document.querySelector('.damage-number');
-
-    if (isEffective) {
-      resultTitle.textContent = "効果抜群！";
-      resultTitle.className = "effective";
-      resultMessage.textContent = weapon.effectiveText;
-      damageDisplay.textContent = "-100";
-    } else {
-      resultTitle.textContent = "攻撃成功！";
-      resultTitle.className = "normal";
-      resultMessage.textContent = weapon.normalText;
-      damageDisplay.textContent = "-100";
+    if (enemy.weakness === weaponType) {
+      multiplier = weapon.effectiveMultiplier;
+      effectiveness = 'effective';
+    } else if (enemy.resist === weaponType) {
+      multiplier = weapon.weakMultiplier;
+      effectiveness = 'weak';
     }
 
-    // AIの豆知識を表示
-    document.getElementById('ai-tip-text').textContent = enemy.tips[weaponType];
+    const damage = Math.floor(weapon.baseDamage * multiplier);
+    GameState.currentEnemyHP -= damage;
+    GameState.lastAttack = { weapon: weaponType, damage, effectiveness };
+
+    // 攻撃アニメーション
+    const enemyImg = document.getElementById('enemy-image');
+    enemyImg.classList.add('shake');
+    setTimeout(() => enemyImg.classList.remove('shake'), 500);
+
+    this.updateHPBars();
+    this.showAttackResult(effectiveness, damage, weapon.name, enemy.tips[weaponType]);
+  },
+
+  // 攻撃結果表示
+  showAttackResult: function(effectiveness, damage, weaponName, tip) {
+    const titles = {
+      effective: '<i class="fa-solid fa-star"></i> 効果は抜群だ！',
+      normal: '<i class="fa-solid fa-check"></i> 攻撃成功！',
+      weak: '<i class="fa-solid fa-minus"></i> 効果はイマイチ...'
+    };
+
+    const resultTitle = document.getElementById('attack-result-title');
+    resultTitle.innerHTML = titles[effectiveness];
+    resultTitle.className = effectiveness;
+
+    document.getElementById('attack-result-message').textContent = `${weaponName}で攻撃！`;
+    document.getElementById('damage-display').innerHTML = `<span class="damage-number">-${damage}</span>`;
+    document.getElementById('ai-tip-text').textContent = tip;
 
     this.showScreen('attack-result');
   },
 
   // 攻撃後の処理
   nextAfterAttack: function() {
-    // HPを0にする（簡易版なので1撃で倒す）
-    document.getElementById('enemy-hp-fill').style.width = '0%';
+    if (GameState.currentEnemyHP <= 0) {
+      // 敵を倒した
+      this.enemyDefeated();
+    } else {
+      // 敵のターン
+      this.enemyAttack();
+    }
+  },
 
-    // スキル獲得
+  // 敵の攻撃
+  enemyAttack: function() {
+    const enemy = GameState.currentEnemy;
+    const damage = Math.max(5, enemy.attack + Math.floor(Math.random() * 10) - 5); // ランダム要素
+
+    GameState.playerHP -= damage;
+    if (GameState.playerHP < 0) GameState.playerHP = 0;
+
+    // 敵攻撃画面に情報をセット
+    document.getElementById('enemy-attack-message').textContent = `${enemy.name}の攻撃！`;
+    document.getElementById('enemy-damage-display').innerHTML = `<span class="damage-number">-${damage}</span>`;
+    document.getElementById('enemy-attack-hp-current').textContent = GameState.playerHP;
+    document.getElementById('enemy-attack-hp-max').textContent = GameState.playerMaxHP;
+
+    this.showScreen('enemy-attack');
+  },
+
+  // 敵攻撃後の続行処理
+  continueAfterEnemyAttack: function() {
+    this.updateHPBars();
+
+    if (GameState.playerHP <= 0) {
+      // ゲームオーバー
+      this.gameOver();
+    } else {
+      // プレイヤーのターン
+      GameState.isPlayerTurn = true;
+      this.enableWeapons(true);
+      this.updateBattleMessage(`<i class="fa-solid fa-wand-sparkles"></i> どの武器で攻撃する？`);
+      this.showScreen('battle');
+    }
+  },
+
+  // 敵を倒した
+  enemyDefeated: function() {
     GameState.earnedSkills.push(GameState.currentEnemy.skill);
 
-    // ステージクリア画面へ
     document.getElementById('defeated-enemy-image').src = GameState.currentEnemy.image;
     document.getElementById('defeated-enemy-name').textContent = GameState.currentEnemy.name;
+
+    const skillIcon = GameState.currentEnemy.skill.icon;
+    const skillName = GameState.currentEnemy.skill.name;
     document.getElementById('skill-badge').innerHTML = `
-      <span class="skill-icon">${GameState.currentEnemy.skill.icon}</span>
-      <span class="skill-name">${GameState.currentEnemy.skill.name}</span>
+      <span class="skill-icon"><i class="fa-solid ${skillIcon}"></i></span>
+      <span class="skill-name">${skillName}</span>
     `;
 
     this.showScreen('stage-clear');
@@ -318,12 +435,15 @@ const Game = {
     GameState.currentStage++;
 
     if (GameState.currentStage > 3) {
-      // ゲームクリア
       this.showEnding();
     } else {
-      // 次のバトル
       this.startBattle();
     }
+  },
+
+  // ゲームオーバー
+  gameOver: function() {
+    this.showScreen('gameover');
   },
 
   // エンディング表示
@@ -332,93 +452,70 @@ const Game = {
     const title = GameData.titles[charType];
     const present = GameData.presents[charType];
 
-    // お姫様のメッセージ
     document.getElementById('princess-message').innerHTML = present.princessMessage;
 
-    // 勇者画像
     const heroImage = charType === 'student' ? 'images/hero-student.png' : 'images/hero-business.png';
     document.getElementById('result-hero-image').src = heroImage;
 
-    // 称号
     document.getElementById('result-title').textContent = title.name;
 
-    // 獲得スキル
     const skillsList = document.getElementById('skills-list');
     skillsList.innerHTML = GameState.earnedSkills.map(skill => `
       <div class="skill-item">
-        <span>${skill.icon}</span>
+        <i class="fa-solid ${skill.icon}"></i>
         <span>${skill.name}</span>
       </div>
     `).join('');
 
-    // プレゼント
     document.getElementById('present-description').textContent = present.description;
     document.getElementById('coupon-code').textContent = present.coupon;
 
-    // CTAボタン
     document.getElementById('cta-message').innerHTML = present.ctaAdvice;
     document.getElementById('btn-main-cta').textContent = present.ctaText;
 
     this.showScreen('ending');
   },
 
+  // メッセージ送信してLIFF閉じる
+  sendMessageAndClose: function(message) {
+    if (GameState.liffInitialized && liff.isInClient()) {
+      liff.sendMessages([{ type: 'text', text: message }])
+        .then(() => liff.closeWindow())
+        .catch((error) => {
+          console.error('Send message error:', error);
+          alert('トーク画面から「' + message + '」と送信してください。');
+        });
+    } else {
+      alert('LINEアプリから「' + message + '」と送信してください！');
+    }
+  },
+
   // 相談へ誘導
   goToConsultation: function() {
     const present = GameData.presents[GameState.character];
-
-    if (GameState.liffInitialized && liff.isInClient()) {
-      // LINEアプリ内の場合、メッセージを送信してLIFFを閉じる
-      liff.sendMessages([
-        {
-          type: 'text',
-          text: present.ctaMessage
-        }
-      ]).then(() => {
-        liff.closeWindow();
-      }).catch((error) => {
-        console.error('Send message error:', error);
-        alert('メッセージの送信に失敗しました。トーク画面から「' + present.ctaMessage + '」と送信してください。');
-      });
-    } else {
-      // LINE外の場合
-      alert('LINEアプリからこのゲームを開いて、「' + present.ctaMessage + '」と送信してください！');
-    }
+    this.sendMessageAndClose(present.ctaMessage);
   },
 
   // 結果をシェア
   shareResult: function() {
     const title = GameData.titles[GameState.character];
-    const shareText = `【AIクエストクリア！】\n称号「${title.name}」を獲得しました！\nあなたもAIの力で世界を救おう！\n\n#AIクエスト #if塾 #AIX`;
+    const shareText = `【AIクエストクリア！】\n称号「${title.name}」を獲得！\n残りHP: ${GameState.playerHP}で勝利！\n\nあなたもAIの力で世界を救おう！\n#AIクエスト #if塾`;
 
     if (GameState.liffInitialized && liff.isApiAvailable('shareTargetPicker')) {
-      liff.shareTargetPicker([
-        {
-          type: 'text',
-          text: shareText
-        }
-      ]).catch((error) => {
-        console.error('Share error:', error);
-        this.fallbackShare(shareText);
-      });
+      liff.shareTargetPicker([{ type: 'text', text: shareText }])
+        .catch(() => this.fallbackShare(shareText));
     } else {
       this.fallbackShare(shareText);
     }
   },
 
-  // フォールバックシェア
   fallbackShare: function(text) {
     if (navigator.share) {
-      navigator.share({
-        title: 'AIクエスト',
-        text: text
-      });
+      navigator.share({ title: 'AIクエスト', text: text });
     } else {
-      // クリップボードにコピー
       navigator.clipboard.writeText(text).then(() => {
         alert('シェア用テキストをコピーしました！');
-      }).catch(() => {
-        alert(text);
-      });
+      }).catch(() => alert(text));
     }
   },
 
@@ -428,8 +525,11 @@ const Game = {
     GameState.currentStage = 1;
     GameState.enemies = [];
     GameState.currentEnemy = null;
+    GameState.currentEnemyHP = 0;
+    GameState.playerHP = 100;
     GameState.earnedSkills = [];
     GameState.lastAttack = null;
+    GameState.isPlayerTurn = true;
 
     this.showScreen('title');
   }
