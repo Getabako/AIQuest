@@ -1457,3 +1457,512 @@ body::after {
     font-size: 16px;
   }
 }
+
+/* ========================================
+   パワーゲージシステム
+   ======================================== */
+.power-gauge-container {
+  background: linear-gradient(180deg, rgba(30, 30, 60, 0.9) 0%, rgba(20, 20, 40, 0.95) 100%);
+  border: 2px solid rgba(100, 100, 180, 0.5);
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin-bottom: 12px;
+}
+
+.power-gauge-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #ffd700;
+  margin-bottom: 8px;
+}
+
+.power-gauge-label i {
+  color: #ffaa00;
+  animation: boltPulse 0.5s infinite;
+}
+
+@keyframes boltPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.gauge-hint {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.power-gauge {
+  position: relative;
+  height: 24px;
+  background: rgba(0, 0, 0, 0.6);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid rgba(100, 100, 150, 0.5);
+}
+
+.power-gauge-zones {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+}
+
+.zone {
+  flex: 1;
+}
+
+.zone-normal {
+  background: rgba(150, 50, 50, 0.3);
+}
+
+.zone-good {
+  background: rgba(150, 150, 50, 0.3);
+}
+
+.zone-perfect {
+  background: rgba(50, 200, 100, 0.4);
+  position: relative;
+}
+
+.zone-perfect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.power-gauge-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(180deg, #ff6666 0%, #cc3333 100%);
+  transition: none;
+  border-radius: 10px;
+}
+
+.power-gauge-fill.good {
+  background: linear-gradient(180deg, #ffff66 0%, #cccc33 100%);
+}
+
+.power-gauge-fill.perfect {
+  background: linear-gradient(180deg, #66ff66 0%, #33cc33 100%);
+  box-shadow: 0 0 15px rgba(50, 255, 50, 0.6);
+}
+
+.power-gauge-indicator {
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 6px;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  transform: translateX(-50%);
+  left: 50%;
+}
+
+/* ========================================
+   コンボ表示
+   ======================================== */
+.combo-display {
+  position: fixed;
+  top: 80px;
+  right: 15px;
+  background: linear-gradient(180deg, rgba(255, 100, 0, 0.9) 0%, rgba(200, 50, 0, 0.95) 100%);
+  padding: 8px 15px;
+  border-radius: 10px;
+  border: 2px solid #ffd700;
+  box-shadow: 0 0 20px rgba(255, 150, 0, 0.6);
+  z-index: 100;
+  animation: comboPop 0.3s ease-out;
+}
+
+.combo-display.hidden {
+  display: none;
+}
+
+.combo-display.active {
+  display: block;
+}
+
+@keyframes comboPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.combo-number {
+  font-size: 28px;
+  font-weight: 900;
+  color: #fff;
+  text-shadow: 0 2px 0 #aa3300;
+}
+
+.combo-text {
+  display: block;
+  font-size: 12px;
+  color: #ffd700;
+  letter-spacing: 2px;
+}
+
+.combo-info {
+  margin-bottom: 15px;
+}
+
+.combo-info.hidden {
+  display: none;
+}
+
+.combo-badge {
+  display: inline-block;
+  background: linear-gradient(180deg, #ff8800 0%, #ff5500 100%);
+  padding: 8px 20px;
+  border-radius: 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 3px 0 #aa3300;
+  animation: comboBadgePulse 0.5s ease-out;
+}
+
+@keyframes comboBadgePulse {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* ========================================
+   敵の行動予告
+   ======================================== */
+.enemy-action-preview {
+  background: linear-gradient(180deg, rgba(100, 50, 50, 0.9) 0%, rgba(60, 30, 30, 0.95) 100%);
+  border: 2px solid rgba(255, 100, 100, 0.5);
+  border-radius: 12px;
+  padding: 12px 15px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.enemy-action-preview.hidden {
+  display: none;
+}
+
+.action-warning {
+  font-size: 12px;
+  color: #ff8888;
+  margin-bottom: 5px;
+}
+
+.action-warning i {
+  color: #ffaa00;
+  animation: warningPulse 0.8s infinite;
+}
+
+@keyframes warningPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.action-type {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff6b6b;
+  margin-bottom: 5px;
+}
+
+.action-type i {
+  margin-right: 8px;
+}
+
+.counter-hint {
+  font-size: 12px;
+  color: #88ff88;
+}
+
+.counter-hint i {
+  color: #ffd700;
+}
+
+/* ========================================
+   パワーレーティング表示
+   ======================================== */
+.power-rating {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 14px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.power-rating.critical {
+  background: linear-gradient(180deg, #ffd700 0%, #ff8800 100%);
+  color: #1a0a00;
+  animation: criticalShine 0.5s infinite;
+  box-shadow: 0 0 20px rgba(255, 200, 0, 0.8);
+}
+
+@keyframes criticalShine {
+  0%, 100% { box-shadow: 0 0 20px rgba(255, 200, 0, 0.8); }
+  50% { box-shadow: 0 0 30px rgba(255, 200, 0, 1); }
+}
+
+.power-rating.perfect {
+  background: linear-gradient(180deg, #66ff66 0%, #33cc33 100%);
+  color: #003300;
+}
+
+.power-rating.good {
+  background: linear-gradient(180deg, #ffff66 0%, #cccc33 100%);
+  color: #333300;
+}
+
+/* ========================================
+   ダメージエフェクト
+   ======================================== */
+.damage-number.huge {
+  font-size: 72px;
+  animation: hugeShake 0.6s ease-out;
+}
+
+.damage-number.large {
+  font-size: 64px;
+}
+
+.damage-number.medium {
+  font-size: 52px;
+}
+
+.damage-number.critical-damage {
+  color: #ffd700;
+  text-shadow:
+    0 0 30px rgba(255, 215, 0, 1),
+    0 0 50px rgba(255, 150, 0, 0.8),
+    0 4px 0 #b38600;
+}
+
+@keyframes hugeShake {
+  0%, 100% { transform: translateX(0) scale(1); }
+  10% { transform: translateX(-20px) scale(1.2); }
+  30% { transform: translateX(20px) scale(1.15); }
+  50% { transform: translateX(-15px) scale(1.1); }
+  70% { transform: translateX(15px) scale(1.05); }
+}
+
+.damage-number.blocked {
+  color: #88ccff;
+  text-shadow:
+    0 0 20px rgba(100, 180, 255, 0.8),
+    0 3px 0 #004488;
+}
+
+/* エフェクトコンテナ */
+.effect-critical-container .effect-critical {
+  font-size: 80px;
+  color: #ffd700;
+  animation: criticalEffect 0.8s ease-out;
+}
+
+.effect-critical-container .effect-critical i {
+  margin: 0 5px;
+}
+
+@keyframes criticalEffect {
+  0% { transform: scale(0) rotate(-30deg); opacity: 0; }
+  50% { transform: scale(1.5) rotate(15deg); }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.effect-huge-container .effect-huge {
+  font-size: 70px;
+  color: #ff4444;
+  animation: hugeEffect 0.6s ease-out;
+}
+
+.effect-huge-container .effect-huge i {
+  margin: 0 3px;
+}
+
+@keyframes hugeEffect {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.effect-large-container .effect-large {
+  font-size: 60px;
+  color: #ff8800;
+  animation: largeEffect 0.5s ease-out;
+}
+
+.effect-large-container .effect-large i {
+  margin: 0 5px;
+}
+
+@keyframes largeEffect {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.effect-medium-container .effect-medium {
+  font-size: 50px;
+  color: #ffcc00;
+  animation: mediumEffect 0.4s ease-out;
+}
+
+@keyframes mediumEffect {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.effect-small-container .effect-small {
+  font-size: 40px;
+  color: #aaaaaa;
+}
+
+/* クリティカルタイトル */
+#attack-result-title.critical {
+  color: #ffd700;
+  font-size: 36px;
+  animation: criticalTitle 0.5s ease-out;
+}
+
+@keyframes criticalTitle {
+  0% { transform: scale(0.5); }
+  50% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* ========================================
+   防御成功表示
+   ======================================== */
+.block-success {
+  display: inline-block;
+  background: linear-gradient(180deg, rgba(80, 150, 255, 0.3) 0%, rgba(50, 100, 200, 0.4) 100%);
+  padding: 5px 15px;
+  border-radius: 15px;
+  font-size: 14px;
+  color: #88ccff;
+  margin-top: 10px;
+  border: 1px solid rgba(100, 180, 255, 0.5);
+}
+
+/* ========================================
+   スコア表示
+   ======================================== */
+.score-display {
+  background: linear-gradient(180deg, rgba(50, 50, 100, 0.9) 0%, rgba(30, 30, 70, 0.95) 100%);
+  border: 2px solid rgba(100, 150, 255, 0.4);
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  box-shadow:
+    0 5px 0 rgba(0, 0, 0, 0.3),
+    0 0 30px currentColor;
+  animation: rankBounce 0.8s ease-out;
+}
+
+@keyframes rankBounce {
+  0% { transform: scale(0) rotate(-20deg); }
+  50% { transform: scale(1.2) rotate(10deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.rank-letter {
+  font-size: 48px;
+  font-weight: 900;
+  color: #1a1a2e;
+  text-shadow: 0 2px 0 rgba(255, 255, 255, 0.3);
+}
+
+.rank-message {
+  font-size: 18px;
+  color: #ffd700;
+  margin-bottom: 15px;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+}
+
+.score-details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.score-item {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.score-label {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 3px;
+}
+
+.score-value {
+  font-size: 18px;
+  font-weight: bold;
+  color: #88ccff;
+}
+
+/* ========================================
+   スコアポップアップ
+   ======================================== */
+.score-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 200, 0, 0.9);
+  color: #1a0a00;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  z-index: 1000;
+  animation: scorePopup 1s ease-out forwards;
+  pointer-events: none;
+}
+
+.score-popup small {
+  font-size: 12px;
+  margin-left: 5px;
+}
+
+@keyframes scorePopup {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(0.5);
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -150%) scale(1);
+  }
+}

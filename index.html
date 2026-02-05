@@ -84,6 +84,9 @@
         </div>
       </div>
 
+      <!-- コンボ表示 -->
+      <div id="combo-display" class="combo-display hidden"></div>
+
       <div class="enemy-area">
         <div class="enemy-container">
           <img src="images/enemy-student-1.png" alt="敵" id="enemy-image" class="enemy-image">
@@ -98,8 +101,30 @@
         </div>
       </div>
 
+      <!-- 敵の行動予告 -->
+      <div id="enemy-action-preview" class="enemy-action-preview hidden"></div>
+
       <div class="battle-message" id="battle-message">
         <i class="fa-solid fa-exclamation-triangle"></i> 敵が現れた！どの武器で戦う？
+      </div>
+
+      <!-- パワーゲージ -->
+      <div class="power-gauge-container">
+        <div class="power-gauge-label">
+          <i class="fa-solid fa-bolt"></i> タイミングゲージ
+          <span class="gauge-hint">中央で攻撃するとボーナス！</span>
+        </div>
+        <div class="power-gauge">
+          <div class="power-gauge-zones">
+            <div class="zone zone-normal"></div>
+            <div class="zone zone-good"></div>
+            <div class="zone zone-perfect"></div>
+            <div class="zone zone-good"></div>
+            <div class="zone zone-normal"></div>
+          </div>
+          <div class="power-gauge-fill" id="power-gauge-fill"></div>
+          <div class="power-gauge-indicator" id="power-gauge-indicator"></div>
+        </div>
       </div>
 
       <div class="weapon-select">
@@ -123,7 +148,7 @@
         </div>
         <div class="hint-box" id="hint-box">
           <span class="hint-icon"><i class="fa-solid fa-lightbulb"></i></span>
-          <span id="hint-text">敵の弱点に合った武器を選ぶと大ダメージ！</span>
+          <span id="hint-text">敵の弱点に合った武器を選ぶと大ダメージ！防御で敵の攻撃も軽減！</span>
         </div>
       </div>
     </div>
@@ -139,6 +164,8 @@
         <div class="damage-display" id="damage-display">
           <span class="damage-number">-100</span>
         </div>
+        <!-- コンボ情報 -->
+        <div id="combo-info" class="combo-info hidden"></div>
         <div class="ai-tip" id="ai-tip">
           <h4><i class="fa-solid fa-lightbulb"></i> AIの豆知識</h4>
           <p id="ai-tip-text">ChatGPTは質問に答えるだけじゃない！文章作成、翻訳、プログラミングの手助けもできるよ！</p>
@@ -232,6 +259,11 @@
           <div class="hero-result">
             <img src="images/hero-student.png" alt="勇者" id="result-hero-image">
             <h2 id="result-title"><i class="fa-solid fa-medal"></i> AI活用マスター</h2>
+          </div>
+
+          <!-- スコア＆ランキング表示 -->
+          <div id="score-display" class="score-display">
+            <!-- JSで生成 -->
           </div>
 
           <div class="skills-earned">
