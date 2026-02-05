@@ -318,10 +318,10 @@ const Game = {
   // ========================================
   shuffleWeapons: function() {
     const weaponTypes = ['chatgpt', 'automation', 'image'];
-    const weaponLabels = {
-      chatgpt: ['質問で斬る！', '知識で突く！', 'AIで解決！', '対話で撃破！'],
-      automation: ['自動で守る！', '効率で防ぐ！', '仕組みで倒す！', 'システムで攻撃！'],
-      image: ['創造で射る！', 'ビジュアルで攻撃！', '画像で撃つ！', 'デザインで倒す！']
+    const weaponIcons = {
+      chatgpt: 'fa-comment-dots',
+      automation: 'fa-gears',
+      image: 'fa-palette'
     };
 
     // 位置をシャッフル
@@ -332,14 +332,12 @@ const Game = {
     const weaponsContainer = document.querySelector('.weapons');
     if (weaponsContainer) {
       const buttons = [];
-      shuffled.forEach((type, index) => {
+      shuffled.forEach((type) => {
         const weapon = GameData.weapons[type];
-        const randomLabel = weaponLabels[type][Math.floor(Math.random() * weaponLabels[type].length)];
         buttons.push(`
           <button class="weapon-btn" onclick="Game.attack('${type}')" id="weapon-${type}">
-            <div class="weapon-icon"><i class="fa-solid ${weapon.icon}"></i></div>
-            <div class="weapon-name">${weapon.name}</div>
-            <div class="weapon-desc">${randomLabel}</div>
+            <span class="weapon-icon"><i class="fa-solid ${weaponIcons[type]}"></i></span>
+            <span class="weapon-name">${weapon.name}</span>
           </button>
         `);
       });
@@ -368,10 +366,8 @@ const Game = {
     if (comboElement) {
       if (GameState.combo.count >= 2) {
         comboElement.innerHTML = `<span class="combo-number">${GameState.combo.count}</span><span class="combo-text">COMBO!</span>`;
-        comboElement.classList.add('active');
         comboElement.classList.remove('hidden');
       } else {
-        comboElement.classList.remove('active');
         comboElement.classList.add('hidden');
       }
     }
@@ -401,23 +397,9 @@ const Game = {
   },
 
   updateEnemyActionDisplay: function() {
-    const actionElement = document.getElementById('enemy-action-preview');
+    const actionElement = document.getElementById('enemy-next-action');
     if (actionElement && GameState.enemyNextAction) {
-      actionElement.innerHTML = `
-        <div class="action-warning">
-          <i class="fa-solid fa-exclamation-triangle"></i>
-          <span>次の敵の攻撃:</span>
-        </div>
-        <div class="action-type">
-          <i class="fa-solid ${GameState.enemyNextAction.icon}"></i>
-          ${GameState.enemyNextAction.name}
-        </div>
-        <div class="counter-hint">
-          <i class="fa-solid fa-lightbulb"></i>
-          ${GameState.enemyNextAction.description}
-        </div>
-      `;
-      actionElement.classList.remove('hidden');
+      actionElement.innerHTML = `次: ${GameState.enemyNextAction.name} → ${GameState.enemyNextAction.description}`;
     }
   },
 
@@ -433,15 +415,7 @@ const Game = {
   // ========================================
   addScore: function(points, reason) {
     GameState.score.total += points;
-    this.showScorePopup(points, reason);
-  },
-
-  showScorePopup: function(points, reason) {
-    const popup = document.createElement('div');
-    popup.className = 'score-popup';
-    popup.innerHTML = `+${points} <small>${reason}</small>`;
-    document.body.appendChild(popup);
-    setTimeout(() => popup.remove(), 1000);
+    // スコアポップアップはサイドビューではダメージポップアップで代用
   },
 
   calculateRank: function() {
@@ -507,11 +481,16 @@ const Game = {
 
     // UI更新
     document.getElementById('current-stage').textContent = GameState.currentStage;
-    document.getElementById('progress-fill').style.width = `${(GameState.currentStage / 3) * 100}%`;
 
     document.getElementById('enemy-image').src = GameState.currentEnemy.image;
     document.getElementById('enemy-name').textContent = GameState.currentEnemy.name;
-    document.getElementById('enemy-description').textContent = GameState.currentEnemy.description;
+    document.getElementById('enemy-status-name').textContent = GameState.currentEnemy.name;
+
+    // プレイヤー画像設定
+    const playerImg = document.getElementById('player-image');
+    if (playerImg) {
+      playerImg.src = GameState.character === 'student' ? 'images/hero-student.png' : 'images/hero-business.png';
+    }
 
     this.updateHPBars();
     this.updateBattleMessage(`${GameState.currentEnemy.name}が現れた！`);
@@ -531,24 +510,36 @@ const Game = {
     const enemyHPPercent = (GameState.currentEnemyHP / GameState.currentEnemy.hp) * 100;
     const playerHPPercent = (GameState.playerHP / GameState.playerMaxHP) * 100;
 
-    document.getElementById('enemy-hp-fill').style.width = `${Math.max(0, enemyHPPercent)}%`;
-
-    document.getElementById('player-hp-fill').style.width = `${Math.max(0, playerHPPercent)}%`;
-    document.getElementById('player-hp-current').textContent = Math.max(0, GameState.playerHP);
-    document.getElementById('player-hp-max').textContent = GameState.playerMaxHP;
-
-    // HPバーの色を変更（危険時は赤く）
-    const playerHPBar = document.getElementById('player-hp-fill');
-    if (playerHPPercent <= 25) {
-      playerHPBar.classList.add('danger');
-    } else {
-      playerHPBar.classList.remove('danger');
+    const enemyHPFill = document.getElementById('enemy-hp-fill');
+    if (enemyHPFill) {
+      enemyHPFill.style.width = `${Math.max(0, enemyHPPercent)}%`;
     }
+
+    const playerHPFill = document.getElementById('player-hp-fill');
+    if (playerHPFill) {
+      playerHPFill.style.width = `${Math.max(0, playerHPPercent)}%`;
+
+      // HPバーの色を変更（危険時は赤く）
+      if (playerHPPercent <= 25) {
+        playerHPFill.classList.add('danger');
+      } else {
+        playerHPFill.classList.remove('danger');
+      }
+    }
+
+    const playerHPCurrent = document.getElementById('player-hp-current');
+    const playerHPMax = document.getElementById('player-hp-max');
+    if (playerHPCurrent) playerHPCurrent.textContent = Math.max(0, GameState.playerHP);
+    if (playerHPMax) playerHPMax.textContent = GameState.playerMaxHP;
   },
 
   // バトルメッセージ更新
-  updateBattleMessage: function(message) {
-    document.getElementById('battle-message').innerHTML = message;
+  updateBattleMessage: function(message, className = '') {
+    const msgEl = document.getElementById('battle-message');
+    if (msgEl) {
+      msgEl.innerHTML = message;
+      msgEl.className = 'log-message ' + className;
+    }
   },
 
   // 武器ボタンの有効/無効
@@ -587,8 +578,6 @@ const Game = {
       baseMultiplier = weapon.weakMultiplier;
       effectiveness = 'weak';
       this.resetCombo();
-    } else {
-      // 通常ヒットでもコンボ継続（弱点外しでリセット）
     }
 
     // パワーゲージのボーナス
@@ -616,6 +605,7 @@ const Game = {
     }
 
     GameState.currentEnemyHP -= finalDamage;
+    if (GameState.currentEnemyHP < 0) GameState.currentEnemyHP = 0;
     GameState.score.damageDealt += finalDamage;
     GameState.lastAttack = {
       weapon: weaponType,
@@ -623,7 +613,8 @@ const Game = {
       effectiveness,
       powerRating,
       comboCount: GameState.combo.count,
-      isCritical
+      isCritical,
+      tip: enemy.tips[weaponType]
     };
 
     // スコア加算
@@ -632,141 +623,134 @@ const Game = {
     if (isCritical) this.addScore(300, 'クリティカル！');
     if (GameState.combo.count >= 3) this.addScore(GameState.combo.count * 20, 'コンボボーナス');
 
-    // 攻撃アニメーション
-    const enemyImg = document.getElementById('enemy-image');
-    enemyImg.classList.add('shake');
-    setTimeout(() => enemyImg.classList.remove('shake'), 500);
-
-    this.updateHPBars();
-    this.showAttackResult(effectiveness, finalDamage, weapon.name, enemy.tips[weaponType], powerRating, isCritical);
+    // サイドビュー用アニメーション
+    this.playAttackAnimation(finalDamage, effectiveness, isCritical, powerRating);
   },
 
-  // 攻撃結果表示
-  showAttackResult: function(effectiveness, damage, weaponName, tip, powerRating = 'normal', isCritical = false) {
-    const titles = {
-      effective: '<i class="fa-solid fa-star"></i> 効果は抜群だ！',
-      normal: '<i class="fa-solid fa-check"></i> 攻撃成功！',
-      weak: '<i class="fa-solid fa-minus"></i> 効果はイマイチ...'
-    };
+  // ========================================
+  // サイドビュー用アニメーション
+  // ========================================
+  playAttackAnimation: function(damage, effectiveness, isCritical, powerRating) {
+    const playerSprite = document.getElementById('player-image');
+    const enemySprite = document.getElementById('enemy-image');
+    const enemyEffect = document.getElementById('enemy-effect');
 
-    const resultTitle = document.getElementById('attack-result-title');
+    // メッセージ表示
+    let msgClass = '';
+    let msgText = `${GameData.weapons[GameState.lastAttack.weapon].name}で攻撃！`;
 
-    // クリティカルヒットの特別表示
     if (isCritical) {
-      resultTitle.innerHTML = '<i class="fa-solid fa-explosion"></i> CRITICAL HIT!!';
-      resultTitle.className = 'critical';
-    } else {
-      resultTitle.innerHTML = titles[effectiveness];
-      resultTitle.className = effectiveness;
+      msgClass = 'critical';
+      msgText = 'CRITICAL HIT！！';
+    } else if (effectiveness === 'effective') {
+      msgClass = 'effective';
+      msgText = '効果は抜群だ！';
+    } else if (effectiveness === 'weak') {
+      msgClass = 'weak';
+      msgText = '効果はイマイチ...';
     }
 
-    // パワーゲージの結果メッセージ
-    const powerMessages = {
-      critical: '⚡ PERFECT TIMING! ⚡',
-      perfect: '✨ Great Timing! ✨',
-      good: '👍 Good Timing!',
-      normal: ''
-    };
+    this.updateBattleMessage(msgText, msgClass);
 
-    let attackMessage = `${weaponName}で攻撃！`;
-    if (powerMessages[powerRating]) {
-      attackMessage += `<br><span class="power-rating ${powerRating}">${powerMessages[powerRating]}</span>`;
-    }
+    // プレイヤー攻撃アニメーション
+    playerSprite.classList.add('attack');
 
-    document.getElementById('attack-result-message').innerHTML = attackMessage;
+    // 攻撃ヒットタイミング（0.3秒後）
+    setTimeout(() => {
+      // 敵にヒットエフェクト
+      enemySprite.classList.add('shake');
 
-    // ダメージ表示（サイズと色をダメージ量で変更）
-    const damageDisplay = document.getElementById('damage-display');
-    let damageClass = 'damage-number';
-    if (damage >= 100) damageClass += ' huge';
-    else if (damage >= 60) damageClass += ' large';
-    else if (damage >= 40) damageClass += ' medium';
-
-    if (isCritical) damageClass += ' critical-damage';
-
-    damageDisplay.innerHTML = `<span class="${damageClass}">-${damage}</span>`;
-
-    // コンボ表示
-    const comboInfo = document.getElementById('combo-info');
-    if (comboInfo) {
-      if (GameState.combo.count >= 2) {
-        comboInfo.innerHTML = `<span class="combo-badge">${GameState.combo.count} COMBO! (x${this.getComboMultiplier().toFixed(1)})</span>`;
-        comboInfo.classList.remove('hidden');
+      // エフェクト表示
+      if (isCritical) {
+        enemyEffect.innerHTML = '<i class="fa-solid fa-star"></i><i class="fa-solid fa-bolt"></i>';
+        enemyEffect.className = 'sprite-effect critical-effect';
       } else {
-        comboInfo.classList.add('hidden');
+        enemyEffect.innerHTML = '<i class="fa-solid fa-burst"></i>';
+        enemyEffect.className = 'sprite-effect hit-effect';
       }
-    }
 
-    // ダメージに応じたエフェクト表示
-    this.showDamageEffect(damage, isCritical);
+      // ダメージポップアップ
+      this.showDamagePopup(damage, isCritical, 'enemy');
 
-    document.getElementById('ai-tip-text').textContent = tip;
+      // HPバー更新
+      this.updateHPBars();
+    }, 300);
 
-    this.showScreen('attack-result');
+    // アニメーション終了後
+    setTimeout(() => {
+      playerSprite.classList.remove('attack');
+      enemySprite.classList.remove('shake');
+      enemyEffect.className = 'sprite-effect';
+      enemyEffect.innerHTML = '';
+
+      // 敵撃破チェック
+      if (GameState.currentEnemyHP <= 0) {
+        this.enemyDefeated();
+      } else {
+        // 敵のターン
+        setTimeout(() => this.enemyAttack(), 500);
+      }
+    }, 800);
   },
 
-  // ダメージに応じたエフェクト表示
-  showDamageEffect: function(damage, isCritical) {
-    const effectContainer = document.getElementById('attack-effect');
-    if (!effectContainer) return;
+  // ダメージポップアップ表示
+  showDamagePopup: function(damage, isCritical, target) {
+    const area = document.getElementById('damage-popup-area');
+    if (!area) return;
 
-    let effectHTML = '';
-    let effectClass = '';
+    const popup = document.createElement('div');
+    popup.className = 'damage-popup' + (isCritical ? ' critical' : '');
+    popup.textContent = damage;
 
-    if (isCritical) {
-      effectHTML = `
-        <div class="effect-critical">
-          <i class="fa-solid fa-bolt"></i>
-          <i class="fa-solid fa-star"></i>
-          <i class="fa-solid fa-bolt"></i>
-        </div>
-      `;
-      effectClass = 'effect-critical-container';
-    } else if (damage >= 100) {
-      effectHTML = `
-        <div class="effect-huge">
-          <i class="fa-solid fa-explosion"></i>
-          <i class="fa-solid fa-fire"></i>
-          <i class="fa-solid fa-explosion"></i>
-        </div>
-      `;
-      effectClass = 'effect-huge-container';
-    } else if (damage >= 60) {
-      effectHTML = `
-        <div class="effect-large">
-          <i class="fa-solid fa-burst"></i>
-          <i class="fa-solid fa-sparkles"></i>
-        </div>
-      `;
-      effectClass = 'effect-large-container';
-    } else if (damage >= 40) {
-      effectHTML = `
-        <div class="effect-medium">
-          <i class="fa-solid fa-star"></i>
-        </div>
-      `;
-      effectClass = 'effect-medium-container';
+    // 位置設定
+    if (target === 'enemy') {
+      popup.style.left = '25%';
+      popup.style.top = '40%';
     } else {
-      effectHTML = `
-        <div class="effect-small">
-          <i class="fa-solid fa-circle"></i>
-        </div>
-      `;
-      effectClass = 'effect-small-container';
+      popup.style.right = '25%';
+      popup.style.top = '40%';
     }
 
-    effectContainer.innerHTML = effectHTML;
-    effectContainer.className = `attack-effect ${effectClass}`;
+    area.appendChild(popup);
+
+    setTimeout(() => popup.remove(), 1000);
   },
 
-  // 攻撃後の処理
+  // 防御成功ポップアップ
+  showBlockPopup: function() {
+    const area = document.getElementById('damage-popup-area');
+    if (!area) return;
+
+    const popup = document.createElement('div');
+    popup.className = 'damage-popup block';
+    popup.textContent = 'GUARD!';
+    popup.style.right = '25%';
+    popup.style.top = '30%';
+
+    area.appendChild(popup);
+
+    setTimeout(() => popup.remove(), 1000);
+  },
+
+  // 攻撃後の処理（互換性のため残す - サイドビューでは使用しない）
   nextAfterAttack: function() {
-    if (GameState.currentEnemyHP <= 0) {
-      // 敵を倒した
-      this.enemyDefeated();
-    } else {
-      // 敵のターン
-      this.enemyAttack();
+    // サイドビューではplayAttackAnimation内で処理
+  },
+
+  // AIの豆知識モーダル
+  showTipModal: function(tip) {
+    const modal = document.getElementById('ai-tip-modal');
+    const tipText = document.getElementById('ai-tip-text');
+    if (modal && tipText) {
+      tipText.textContent = tip;
+      modal.classList.remove('hidden');
+    }
+  },
+
+  closeTipModal: function() {
+    const modal = document.getElementById('ai-tip-modal');
+    if (modal) {
+      modal.classList.add('hidden');
     }
   },
 
@@ -775,7 +759,7 @@ const Game = {
     const enemy = GameState.currentEnemy;
     let baseDamage = Math.max(5, enemy.attack + Math.floor(Math.random() * 10) - 5);
 
-    // 防御ボーナスチェック（前回の武器選択が敵の攻撃に対応していたか）
+    // 防御ボーナスチェック
     const lastWeapon = GameState.lastAttack ? GameState.lastAttack.weapon : null;
     const defense = this.checkDefenseBonus(lastWeapon);
 
@@ -790,38 +774,77 @@ const Game = {
     GameState.playerHP -= finalDamage;
     if (GameState.playerHP < 0) GameState.playerHP = 0;
 
-    // 敵攻撃画面に情報をセット
-    let attackMessage = `${enemy.name}の${GameState.enemyNextAction ? GameState.enemyNextAction.name : '攻撃'}！`;
-    if (blocked) {
-      attackMessage += '<br><span class="block-success">🛡️ 防御成功！ダメージ半減！</span>';
-    }
-
-    document.getElementById('enemy-attack-message').innerHTML = attackMessage;
-    document.getElementById('enemy-damage-display').innerHTML = `<span class="damage-number${blocked ? ' blocked' : ''}">-${finalDamage}</span>`;
-    document.getElementById('enemy-attack-hp-current').textContent = GameState.playerHP;
-    document.getElementById('enemy-attack-hp-max').textContent = GameState.playerMaxHP;
-
-    this.showScreen('enemy-attack');
+    // サイドビュー用敵攻撃アニメーション
+    this.playEnemyAttackAnimation(finalDamage, blocked);
   },
 
-  // 敵攻撃後の続行処理
-  continueAfterEnemyAttack: function() {
-    this.updateHPBars();
+  // 敵攻撃アニメーション
+  playEnemyAttackAnimation: function(damage, blocked) {
+    const playerSprite = document.getElementById('player-image');
+    const playerEffect = document.getElementById('player-effect');
+    const enemy = GameState.currentEnemy;
 
-    if (GameState.playerHP <= 0) {
-      // ゲームオーバー
-      this.gameOver();
-    } else {
-      // プレイヤーのターン
-      GameState.isPlayerTurn = true;
-      // 新システム：武器シャッフル、パワーゲージ再開、敵の行動予告更新
-      this.shuffleWeapons();
-      this.startPowerGauge();
-      this.generateEnemyAction();
-      this.enableWeapons(true);
-      this.updateBattleMessage(`<i class="fa-solid fa-wand-sparkles"></i> どの武器で攻撃する？`);
-      this.showScreen('battle');
-    }
+    // メッセージ
+    const actionName = GameState.enemyNextAction ? GameState.enemyNextAction.name : '攻撃';
+    this.updateBattleMessage(`${enemy.name}の${actionName}！`);
+
+    // 敵攻撃モーション（敵が揺れる）
+    const enemySprite = document.getElementById('enemy-image');
+    enemySprite.style.animation = 'none';
+    setTimeout(() => {
+      enemySprite.style.animation = '';
+    }, 10);
+
+    // ヒットタイミング
+    setTimeout(() => {
+      // プレイヤーにダメージ
+      playerSprite.classList.add('hit');
+
+      if (blocked) {
+        this.showBlockPopup();
+        this.updateBattleMessage('防御成功！ダメージ半減！', 'effective');
+      }
+
+      // エフェクト
+      playerEffect.innerHTML = '<i class="fa-solid fa-burst"></i>';
+      playerEffect.className = 'sprite-effect hit-effect';
+
+      // ダメージポップアップ
+      this.showDamagePopup(damage, false, 'player');
+
+      // HPバー更新
+      this.updateHPBars();
+    }, 400);
+
+    // アニメーション終了
+    setTimeout(() => {
+      playerSprite.classList.remove('hit');
+      playerEffect.className = 'sprite-effect';
+      playerEffect.innerHTML = '';
+
+      // ゲームオーバーチェック
+      if (GameState.playerHP <= 0) {
+        setTimeout(() => this.gameOver(), 500);
+      } else {
+        // プレイヤーのターン
+        this.startPlayerTurn();
+      }
+    }, 800);
+  },
+
+  // プレイヤーターン開始
+  startPlayerTurn: function() {
+    GameState.isPlayerTurn = true;
+    this.shuffleWeapons();
+    this.startPowerGauge();
+    this.generateEnemyAction();
+    this.enableWeapons(true);
+    this.updateBattleMessage('どの武器で攻撃する？');
+  },
+
+  // 敵攻撃後の続行処理（互換性のため残す）
+  continueAfterEnemyAttack: function() {
+    // サイドビューでは使用しない
   },
 
   // 敵を倒した

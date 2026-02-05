@@ -62,134 +62,127 @@
       </div>
     </div>
 
-    <!-- バトル画面 -->
+    <!-- バトル画面（サイドビュー形式） -->
     <div id="screen-battle" class="screen">
-      <div class="battle-header">
-        <span class="stage-indicator"><i class="fa-solid fa-flag"></i> STAGE <span id="current-stage">1</span>/3</span>
-        <div class="progress-bar">
-          <div class="progress-fill" id="progress-fill"></div>
+      <!-- バトルフィールド -->
+      <div class="battle-field">
+        <!-- 背景 -->
+        <div class="battle-background"></div>
+
+        <!-- ステージ表示 -->
+        <div class="stage-display">
+          <span>STAGE <span id="current-stage">1</span>/3</span>
+        </div>
+
+        <!-- コンボ表示 -->
+        <div id="combo-display" class="combo-display hidden"></div>
+
+        <!-- ダメージポップアップエリア -->
+        <div id="damage-popup-area" class="damage-popup-area"></div>
+
+        <!-- 敵側（左） -->
+        <div class="battle-side enemy-side">
+          <div class="enemy-sprite-container">
+            <img src="images/enemy-student-1.png" alt="敵" id="enemy-image" class="battle-sprite enemy-sprite">
+            <div id="enemy-effect" class="sprite-effect"></div>
+          </div>
+          <div class="enemy-name-plate">
+            <span id="enemy-name">勉強嫌いゴブリン</span>
+          </div>
+        </div>
+
+        <!-- プレイヤー側（右） -->
+        <div class="battle-side player-side">
+          <div class="player-sprite-container">
+            <img src="images/hero-student.png" alt="勇者" id="player-image" class="battle-sprite player-sprite">
+            <div id="player-effect" class="sprite-effect"></div>
+          </div>
+        </div>
+
+        <!-- バトルメッセージ（中央上部） -->
+        <div id="battle-log" class="battle-log">
+          <div id="battle-message" class="log-message"></div>
         </div>
       </div>
 
-      <!-- プレイヤーステータス -->
-      <div class="player-status">
-        <div class="player-info">
-          <span class="player-label"><i class="fa-solid fa-user"></i> 勇者</span>
-          <div class="player-hp-container">
-            <div class="player-hp-bar">
-              <div class="player-hp-fill" id="player-hp-fill"></div>
+      <!-- 下部UI -->
+      <div class="battle-ui">
+        <!-- ステータスパネル -->
+        <div class="status-panel">
+          <!-- 敵ステータス -->
+          <div class="status-box enemy-status">
+            <div class="status-name" id="enemy-status-name">勉強嫌いゴブリン</div>
+            <div class="status-hp-row">
+              <span class="hp-label">HP</span>
+              <div class="status-hp-bar">
+                <div class="status-hp-fill enemy-hp" id="enemy-hp-fill"></div>
+              </div>
             </div>
-            <span class="player-hp-text">HP: <span id="player-hp-current">100</span>/<span id="player-hp-max">100</span></span>
+            <!-- 敵の行動予告 -->
+            <div id="enemy-action-preview" class="action-preview">
+              <i class="fa-solid fa-exclamation-triangle"></i>
+              <span id="enemy-next-action">次: ???</span>
+            </div>
           </div>
-        </div>
-      </div>
 
-      <!-- コンボ表示 -->
-      <div id="combo-display" class="combo-display hidden"></div>
-
-      <div class="enemy-area">
-        <div class="enemy-container">
-          <img src="images/enemy-student-1.png" alt="敵" id="enemy-image" class="enemy-image">
-          <h3 id="enemy-name">勉強嫌いゴブリン</h3>
-          <p id="enemy-description" class="enemy-desc">「勉強なんてつまらない！」</p>
-          <div class="enemy-hp-container">
-            <span class="enemy-hp-label"><i class="fa-solid fa-heart"></i> HP</span>
-            <div class="enemy-hp-bar">
-              <div class="enemy-hp-fill" id="enemy-hp-fill"></div>
+          <!-- プレイヤーステータス -->
+          <div class="status-box player-status-box">
+            <div class="status-name">勇者</div>
+            <div class="status-hp-row">
+              <span class="hp-label">HP</span>
+              <div class="status-hp-bar">
+                <div class="status-hp-fill player-hp" id="player-hp-fill"></div>
+              </div>
+              <span class="hp-text"><span id="player-hp-current">100</span>/<span id="player-hp-max">100</span></span>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 敵の行動予告 -->
-      <div id="enemy-action-preview" class="enemy-action-preview hidden"></div>
-
-      <div class="battle-message" id="battle-message">
-        <i class="fa-solid fa-exclamation-triangle"></i> 敵が現れた！どの武器で戦う？
-      </div>
-
-      <!-- パワーゲージ -->
-      <div class="power-gauge-container">
-        <div class="power-gauge-label">
-          <i class="fa-solid fa-bolt"></i> タイミングゲージ
-          <span class="gauge-hint">中央で攻撃するとボーナス！</span>
-        </div>
-        <div class="power-gauge">
-          <div class="power-gauge-zones">
-            <div class="zone zone-normal"></div>
-            <div class="zone zone-good"></div>
-            <div class="zone zone-perfect"></div>
-            <div class="zone zone-good"></div>
-            <div class="zone zone-normal"></div>
+        <!-- パワーゲージ -->
+        <div class="power-gauge-panel">
+          <div class="power-gauge-label">
+            <i class="fa-solid fa-bolt"></i> TIMING
           </div>
-          <div class="power-gauge-fill" id="power-gauge-fill"></div>
-          <div class="power-gauge-indicator" id="power-gauge-indicator"></div>
+          <div class="power-gauge">
+            <div class="power-gauge-zones">
+              <div class="zone zone-normal"></div>
+              <div class="zone zone-good"></div>
+              <div class="zone zone-perfect"></div>
+              <div class="zone zone-good"></div>
+              <div class="zone zone-normal"></div>
+            </div>
+            <div class="power-gauge-fill" id="power-gauge-fill"></div>
+            <div class="power-gauge-indicator" id="power-gauge-indicator"></div>
+          </div>
         </div>
-      </div>
 
-      <div class="weapon-select">
-        <h4><i class="fa-solid fa-wand-sparkles"></i> AI武器を選べ！</h4>
-        <div class="weapons">
-          <button class="weapon-btn" onclick="Game.attack('chatgpt')" id="weapon-chatgpt">
-            <div class="weapon-icon"><i class="fa-solid fa-sword"></i></div>
-            <div class="weapon-name">ChatGPT剣</div>
-            <div class="weapon-desc">知識で斬る！</div>
-          </button>
-          <button class="weapon-btn" onclick="Game.attack('automation')" id="weapon-automation">
-            <div class="weapon-icon"><i class="fa-solid fa-shield"></i></div>
-            <div class="weapon-name">自動化の盾</div>
-            <div class="weapon-desc">繰り返しを防ぐ！</div>
-          </button>
-          <button class="weapon-btn" onclick="Game.attack('image')" id="weapon-image">
-            <div class="weapon-icon"><i class="fa-solid fa-bow-arrow"></i></div>
-            <div class="weapon-name">画像生成の弓</div>
-            <div class="weapon-desc">創造力で射る！</div>
-          </button>
-        </div>
-        <div class="hint-box" id="hint-box">
-          <span class="hint-icon"><i class="fa-solid fa-lightbulb"></i></span>
-          <span id="hint-text">敵の弱点に合った武器を選ぶと大ダメージ！防御で敵の攻撃も軽減！</span>
+        <!-- コマンドパネル -->
+        <div class="command-panel">
+          <div class="command-label"><i class="fa-solid fa-wand-sparkles"></i> たたかう</div>
+          <div class="weapons">
+            <button class="weapon-btn" onclick="Game.attack('chatgpt')" id="weapon-chatgpt">
+              <span class="weapon-icon"><i class="fa-solid fa-comment-dots"></i></span>
+              <span class="weapon-name">ChatGPT剣</span>
+            </button>
+            <button class="weapon-btn" onclick="Game.attack('automation')" id="weapon-automation">
+              <span class="weapon-icon"><i class="fa-solid fa-gears"></i></span>
+              <span class="weapon-name">自動化の盾</span>
+            </button>
+            <button class="weapon-btn" onclick="Game.attack('image')" id="weapon-image">
+              <span class="weapon-icon"><i class="fa-solid fa-palette"></i></span>
+              <span class="weapon-name">画像生成の弓</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 攻撃結果画面 -->
-    <div id="screen-attack-result" class="screen">
-      <div class="result-container">
-        <div class="attack-effect" id="attack-effect">
-          <!-- 攻撃エフェクト -->
-        </div>
-        <h2 id="attack-result-title"><i class="fa-solid fa-star"></i> 効果抜群！</h2>
-        <p id="attack-result-message">ChatGPT剣が敵の弱点を突いた！</p>
-        <div class="damage-display" id="damage-display">
-          <span class="damage-number">-100</span>
-        </div>
-        <!-- コンボ情報 -->
-        <div id="combo-info" class="combo-info hidden"></div>
-        <div class="ai-tip" id="ai-tip">
-          <h4><i class="fa-solid fa-lightbulb"></i> AIの豆知識</h4>
-          <p id="ai-tip-text">ChatGPTは質問に答えるだけじゃない！文章作成、翻訳、プログラミングの手助けもできるよ！</p>
-        </div>
-        <button class="btn-primary" onclick="Game.nextAfterAttack()"><i class="fa-solid fa-arrow-right"></i> 次へ</button>
-      </div>
-    </div>
-
-    <!-- 敵の攻撃結果画面 -->
-    <div id="screen-enemy-attack" class="screen">
-      <div class="result-container enemy-attack-result">
-        <div class="enemy-attack-effect" id="enemy-attack-effect">
-          <i class="fa-solid fa-burst"></i>
-        </div>
-        <h2 id="enemy-attack-title"><i class="fa-solid fa-skull-crossbones"></i> 敵の反撃！</h2>
-        <p id="enemy-attack-message">敵が攻撃してきた！</p>
-        <div class="damage-display enemy-damage" id="enemy-damage-display">
-          <span class="damage-number">-20</span>
-        </div>
-        <div class="player-hp-status">
-          <span>勇者のHP: </span>
-          <span id="enemy-attack-hp-current">80</span>/<span id="enemy-attack-hp-max">100</span>
-        </div>
-        <button class="btn-primary" onclick="Game.continueAfterEnemyAttack()"><i class="fa-solid fa-arrow-right"></i> 続ける</button>
+    <!-- AIの豆知識モーダル（オプション表示） -->
+    <div id="ai-tip-modal" class="modal hidden">
+      <div class="modal-content">
+        <h4><i class="fa-solid fa-lightbulb"></i> AIの豆知識</h4>
+        <p id="ai-tip-text"></p>
+        <button class="btn-primary btn-small" onclick="Game.closeTipModal()">OK</button>
       </div>
     </div>
 
