@@ -229,6 +229,49 @@
       </div>
     </div>
 
+    <!-- エンディングカットシーン -->
+    <div id="screen-ending-scene" class="screen">
+      <div class="ending-scene">
+        <!-- 背景 -->
+        <div class="scene-bg">
+          <div class="scene-sky"></div>
+          <div class="scene-ground"></div>
+        </div>
+
+        <!-- キャラクター -->
+        <div class="scene-characters">
+          <div class="scene-char scene-princess-char" id="scene-princess">
+            <img src="images/princess.png" alt="姫" id="scene-princess-img">
+          </div>
+          <div class="scene-char scene-hero-char" id="scene-hero">
+            <img src="images/hero-student.png" alt="勇者" id="scene-hero-img">
+          </div>
+        </div>
+
+        <!-- ハートエフェクトエリア -->
+        <div class="scene-hearts" id="scene-hearts"></div>
+
+        <!-- 花火エフェクトエリア -->
+        <div class="fireworks-container" id="fireworks-container"></div>
+
+        <!-- ダイアログボックス -->
+        <div class="scene-dialog hidden" id="scene-dialog">
+          <div class="dialog-name" id="dialog-name">姫</div>
+          <div class="dialog-text" id="dialog-text"></div>
+          <div class="dialog-indicator"><i class="fa-solid fa-caret-down"></i></div>
+        </div>
+
+        <!-- HAPPY END テキスト -->
+        <div class="scene-happy-end hidden" id="scene-happy-end">
+          <h1>HAPPY END</h1>
+          <p>そして冒険は続く...</p>
+        </div>
+
+        <!-- スキップボタン -->
+        <button class="scene-skip" onclick="Game.skipEndingScene()">SKIP <i class="fa-solid fa-forward"></i></button>
+      </div>
+    </div>
+
     <!-- エンディング画面 -->
     <div id="screen-ending" class="screen">
       <div class="ending-container">

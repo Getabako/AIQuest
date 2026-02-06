@@ -901,7 +901,7 @@ const Game = {
     GameState.currentStage++;
 
     if (GameState.currentStage > 3) {
-      this.showEnding();
+      this.showEndingScene();
     } else {
       this.startBattle();
     }
@@ -912,6 +912,297 @@ const Game = {
     SoundSystem.stopBGM();
     SoundSystem.gameOver();
     this.showScreen('gameover');
+  },
+
+  // ========================================
+  // エンディングカットシーン
+  // ========================================
+  _sceneTimeouts: [],
+  _typewriterId: null,
+  _fireworksId: null,
+
+  showEndingScene: function() {
+    SoundSystem.stopBGM();
+    SoundSystem.playBGM('ending');
+
+    // 勇者画像設定
+    var heroImg = document.getElementById('scene-hero-img');
+    heroImg.src = GameState.character === 'student' ? 'images/hero-student.png' : 'images/hero-business.png';
+
+    // シーンリセット
+    var princess = document.getElementById('scene-princess');
+    var hero = document.getElementById('scene-hero');
+    var dialog = document.getElementById('scene-dialog');
+    var happyEnd = document.getElementById('scene-happy-end');
+    var hearts = document.getElementById('scene-hearts');
+    var fireworks = document.getElementById('fireworks-container');
+
+    princess.className = 'scene-char scene-princess-char';
+    hero.className = 'scene-char scene-hero-char';
+    dialog.classList.add('hidden');
+    happyEnd.classList.add('hidden');
+    hearts.innerHTML = '';
+    fireworks.innerHTML = '';
+
+    // 前のタイマーをクリア
+    this._sceneTimeouts.forEach(clearTimeout);
+    this._sceneTimeouts = [];
+    if (this._typewriterId) clearInterval(this._typewriterId);
+    if (this._fireworksId) clearInterval(this._fireworksId);
+    this._fireworksId = null;
+
+    this.showScreen('ending-scene');
+
+    var self = this;
+
+    // ダイアログデータ
+    var dialogs;
+    if (GameState.character === 'student') {
+      dialogs = [
+        { name: '姫', text: '勇者よ...\nついに会えましたね...' },
+        { name: '勇者', text: '姫！ ご無事でしたか！' },
+        { name: '姫', text: 'あなたのおかげで\n学びの壁は打ち砕かれました' },
+        { name: '姫', text: 'AIの力を使いこなすあなたなら\nきっと未来は明るいですよ' },
+        { name: '姫', text: 'さあ、一緒に\n新しい冒険へ出かけましょう！' }
+      ];
+    } else {
+      dialogs = [
+        { name: '姫', text: '勇者よ...\nついに会えましたね...' },
+        { name: '勇者', text: '姫！ ご無事でしたか！' },
+        { name: '姫', text: 'あなたのおかげで\n業務の闇は消え去りました' },
+        { name: '姫', text: 'AIの力を味方につけたあなたの\nビジネスはもう無敵です' },
+        { name: '姫', text: 'さあ、一緒に\n新しい冒険へ出かけましょう！' }
+      ];
+    }
+
+    // タイマーヘルパー
+    var t = function(delay, fn) {
+      self._sceneTimeouts.push(setTimeout(fn, delay));
+    };
+
+    // === タイムライン ===
+
+    // 0.5s: キャラクター歩いて登場
+    t(500, function() {
+      princess.classList.add('walk-in');
+      hero.classList.add('walk-in');
+    });
+
+    // 3.5s～: ダイアログ開始
+    var dialogDelay = 3500;
+    var dialogInterval = 2800;
+
+    dialogs.forEach(function(d, i) {
+      var delay = dialogDelay + (i * dialogInterval);
+
+      t(delay, function() {
+        self._showSceneDialog(d.name, d.text);
+        SoundSystem.select();
+      });
+
+      // 3つ目のダイアログ後にハート
+      if (i === 2) {
+        t(delay + 1500, function() {
+          self._spawnSceneHearts(5);
+        });
+      }
+
+      // 4つ目でキャラが近づく + ハート
+      if (i === 3) {
+        t(delay, function() {
+          princess.classList.add('close');
+          hero.classList.add('close');
+        });
+        t(delay + 800, function() {
+          self._spawnSceneHearts(8);
+        });
+      }
+    });
+
+    // 最後のダイアログ後: HAPPY END + 花火
+    var happyEndDelay = dialogDelay + (dialogs.length * dialogInterval) + 1500;
+
+    t(happyEndDelay, function() {
+      dialog.classList.add('hidden');
+      happyEnd.classList.remove('hidden');
+      SoundSystem.victory();
+
+      // ハート大量発生
+      self._spawnSceneHearts(12);
+      t(800, function() { self._spawnSceneHearts(8); });
+
+      // 花火開始
+      self._startFireworks();
+    });
+
+    // 結果画面へ遷移
+    t(happyEndDelay + 5000, function() {
+      self._stopFireworks();
+      self.showEnding();
+    });
+  },
+
+  skipEndingScene: function() {
+    this._sceneTimeouts.forEach(clearTimeout);
+    this._sceneTimeouts = [];
+    if (this._typewriterId) clearInterval(this._typewriterId);
+    this._stopFireworks();
+    SoundSystem.stopBGM();
+    this.showEnding();
+  },
+
+  _showSceneDialog: function(name, text) {
+    var dialog = document.getElementById('scene-dialog');
+    var nameEl = document.getElementById('dialog-name');
+    var textEl = document.getElementById('dialog-text');
+
+    dialog.classList.remove('hidden');
+    nameEl.textContent = name;
+    textEl.textContent = '';
+
+    // タイプライター効果
+    var chars = text.split('');
+    var i = 0;
+    var self = this;
+
+    if (this._typewriterId) clearInterval(this._typewriterId);
+
+    this._typewriterId = setInterval(function() {
+      if (i < chars.length) {
+        textEl.textContent += chars[i];
+        i++;
+      } else {
+        clearInterval(self._typewriterId);
+      }
+    }, 50);
+  },
+
+  _spawnSceneHearts: function(count) {
+    var container = document.getElementById('scene-hearts');
+    if (!container) return;
+
+    for (var i = 0; i < count; i++) {
+      var heart = document.createElement('div');
+      heart.className = 'scene-heart';
+      heart.innerHTML = '<i class="fa-solid fa-heart"></i>';
+      heart.style.left = (20 + Math.random() * 60) + '%';
+      heart.style.bottom = (20 + Math.random() * 25) + '%';
+      heart.style.animationDelay = (Math.random() * 1.5) + 's';
+      heart.style.fontSize = (16 + Math.random() * 22) + 'px';
+      container.appendChild(heart);
+
+      (function(el) {
+        setTimeout(function() { if (el.parentNode) el.remove(); }, 5000);
+      })(heart);
+    }
+  },
+
+  // ========================================
+  // 花火エフェクト
+  // ========================================
+  _startFireworks: function() {
+    var self = this;
+    // 即座に1発
+    self._launchFirework();
+    // 定期的に花火を打ち上げ
+    this._fireworksId = setInterval(function() {
+      self._launchFirework();
+    }, 800);
+  },
+
+  _stopFireworks: function() {
+    if (this._fireworksId) {
+      clearInterval(this._fireworksId);
+      this._fireworksId = null;
+    }
+  },
+
+  _launchFirework: function() {
+    var container = document.getElementById('fireworks-container');
+    if (!container) return;
+
+    // 打ち上げ位置
+    var x = 10 + Math.random() * 80; // %
+    var burstY = 10 + Math.random() * 35; // 上部で破裂 (%)
+
+    // 色をランダムに選択
+    var colors = [
+      ['#ff4444', '#ff8888', '#ffaaaa'],
+      ['#44ff44', '#88ff88', '#aaffaa'],
+      ['#4444ff', '#8888ff', '#aaaaff'],
+      ['#ffd700', '#ffea80', '#fff4cc'],
+      ['#ff44ff', '#ff88ff', '#ffaaff'],
+      ['#44ffff', '#88ffff', '#aaffff'],
+      ['#ff8800', '#ffaa44', '#ffcc88']
+    ];
+    var colorSet = colors[Math.floor(Math.random() * colors.length)];
+
+    // 打ち上げ軌跡
+    var trail = document.createElement('div');
+    trail.className = 'firework-trail';
+    trail.style.left = x + '%';
+    trail.style.bottom = '12%';
+    container.appendChild(trail);
+
+    // 花火効果音
+    SoundSystem.init();
+    SoundSystem.resume();
+    if (SoundSystem.ctx && SoundSystem.enabled) {
+      var t = SoundSystem.ctx.currentTime + 0.6;
+      SoundSystem.playNoise(0.15, 0.12, t);
+      SoundSystem.playNote(800 + Math.random() * 400, 0.1, 'sine', 0.08, t);
+    }
+
+    var self = this;
+
+    // 0.8秒後に破裂
+    setTimeout(function() {
+      if (trail.parentNode) trail.remove();
+
+      // パーティクル生成
+      var particleCount = 20 + Math.floor(Math.random() * 15);
+      for (var i = 0; i < particleCount; i++) {
+        var particle = document.createElement('div');
+        particle.className = 'firework-particle';
+
+        // 円形に散らばる
+        var angle = (Math.PI * 2 / particleCount) * i + (Math.random() - 0.5) * 0.5;
+        var distance = 40 + Math.random() * 60;
+        var fx = Math.cos(angle) * distance;
+        var fy = Math.sin(angle) * distance;
+
+        particle.style.left = x + '%';
+        particle.style.top = burstY + '%';
+        particle.style.background = colorSet[Math.floor(Math.random() * colorSet.length)];
+        particle.style.boxShadow = '0 0 6px ' + colorSet[0];
+        particle.style.setProperty('--fx', fx + 'px');
+        particle.style.setProperty('--fy', fy + 'px');
+        particle.style.animationDuration = (1 + Math.random() * 0.8) + 's';
+        particle.style.width = (3 + Math.random() * 3) + 'px';
+        particle.style.height = particle.style.width;
+
+        container.appendChild(particle);
+
+        (function(el) {
+          setTimeout(function() { if (el.parentNode) el.remove(); }, 2500);
+        })(particle);
+      }
+
+      // キラキラ余韻
+      for (var j = 0; j < 8; j++) {
+        var sparkle = document.createElement('div');
+        sparkle.className = 'firework-sparkle';
+        sparkle.style.left = (parseFloat(x) - 5 + Math.random() * 10) + '%';
+        sparkle.style.top = (burstY - 3 + Math.random() * 6) + '%';
+        sparkle.style.background = colorSet[1];
+        sparkle.style.animationDelay = (0.3 + Math.random() * 0.5) + 's';
+        container.appendChild(sparkle);
+
+        (function(el) {
+          setTimeout(function() { if (el.parentNode) el.remove(); }, 3000);
+        })(sparkle);
+      }
+    }, 800);
   },
 
   // エンディング表示

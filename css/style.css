@@ -2229,3 +2229,416 @@ body::after {
     transform: translate(-50%, -150%) scale(1);
   }
 }
+
+/* ========================================
+   エンディングカットシーン
+   ======================================== */
+#screen-ending-scene {
+  padding: 0;
+  overflow: hidden;
+}
+
+.ending-scene {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 背景 */
+.scene-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.scene-sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 80px;
+  background: linear-gradient(
+    180deg,
+    #0a0a2e 0%,
+    #1a1050 20%,
+    #2a2060 40%,
+    #4a3080 60%,
+    #8a50a0 80%,
+    #cc7030 95%,
+    #ff9040 100%
+  );
+}
+
+/* 星の点滅 */
+.scene-sky::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 40%;
+  background-image:
+    radial-gradient(2px 2px at 15px 20px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(1px 1px at 50px 50px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 100px 15px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(1px 1px at 140px 60px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(2px 2px at 180px 35px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(1px 1px at 220px 10px, rgba(255,255,255,0.8), transparent),
+    radial-gradient(2px 2px at 260px 70px, rgba(255,255,255,0.4), transparent),
+    radial-gradient(1px 1px at 300px 25px, rgba(255,255,255,0.7), transparent),
+    radial-gradient(2px 2px at 350px 55px, rgba(255,255,255,0.5), transparent),
+    radial-gradient(1px 1px at 400px 40px, rgba(255,255,255,0.6), transparent),
+    radial-gradient(2px 2px at 450px 20px, rgba(255,255,255,0.8), transparent);
+  background-repeat: repeat;
+  background-size: 480px 80px;
+  animation: sceneStarsTwinkle 3s ease-in-out infinite;
+}
+
+@keyframes sceneStarsTwinkle {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
+.scene-ground {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(180deg, #3a7a2a 0%, #2a5a1a 50%, #1a3a10 100%);
+  border-top: 3px solid #5aaa3a;
+}
+
+.scene-ground::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 0;
+  right: 0;
+  height: 6px;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255,255,255,0.08) 0px,
+    rgba(255,255,255,0.08) 4px,
+    transparent 4px,
+    transparent 12px
+  );
+}
+
+/* キャラクターエリア */
+.scene-characters {
+  position: absolute;
+  bottom: 80px;
+  left: 0;
+  right: 0;
+  height: 140px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.scene-char {
+  position: absolute;
+  bottom: 0;
+}
+
+.scene-char img {
+  width: 110px;
+  height: 110px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.5));
+}
+
+/* 姫: 左から歩いてくる */
+.scene-princess-char {
+  left: -130px;
+  transition: left 2.5s ease-out;
+}
+
+.scene-princess-char.walk-in {
+  left: calc(50% - 120px);
+}
+
+.scene-princess-char.walk-in img {
+  animation: sceneCharBounce 0.5s ease-in-out infinite;
+}
+
+.scene-princess-char.close {
+  left: calc(50% - 95px);
+  transition: left 1.2s ease-out;
+}
+
+/* 勇者: 右から歩いてくる */
+.scene-hero-char {
+  right: -130px;
+  transition: right 2.5s ease-out;
+}
+
+.scene-hero-char.walk-in {
+  right: calc(50% - 120px);
+}
+
+.scene-hero-char.walk-in img {
+  animation: sceneCharBounce 0.5s ease-in-out infinite 0.25s;
+}
+
+.scene-hero-char.close {
+  right: calc(50% - 95px);
+  transition: right 1.2s ease-out;
+}
+
+@keyframes sceneCharBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+/* 停止（着地） */
+.scene-princess-char.idle img,
+.scene-hero-char.idle img {
+  animation: sceneCharIdle 3s ease-in-out infinite;
+}
+
+@keyframes sceneCharIdle {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* ハートエフェクト */
+.scene-hearts {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.scene-heart {
+  position: absolute;
+  color: #ff6699;
+  animation: sceneHeartFloat 3s ease-out forwards;
+  pointer-events: none;
+  text-shadow: 0 0 10px rgba(255, 100, 150, 0.6);
+}
+
+.scene-heart i {
+  margin: 0;
+}
+
+@keyframes sceneHeartFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0) rotate(0deg);
+  }
+  15% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.2) rotate(-10deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-250px) scale(0.4) rotate(20deg);
+  }
+}
+
+/* ダイアログボックス */
+.scene-dialog {
+  position: absolute;
+  bottom: 100px;
+  left: 15px;
+  right: 15px;
+  background: rgba(0, 0, 30, 0.92);
+  border: 3px solid #fff;
+  border-radius: 12px;
+  padding: 15px 18px 20px;
+  z-index: 50;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.scene-dialog.hidden {
+  display: none;
+}
+
+.dialog-name {
+  font-size: 13px;
+  color: #ffd700;
+  font-weight: bold;
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.dialog-text {
+  font-size: 15px;
+  color: #fff;
+  line-height: 1.8;
+  min-height: 54px;
+  white-space: pre-wrap;
+}
+
+.dialog-indicator {
+  position: absolute;
+  bottom: 8px;
+  right: 15px;
+  color: #fff;
+  font-size: 12px;
+  animation: dialogIndicatorBlink 0.8s infinite;
+}
+
+@keyframes dialogIndicatorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* HAPPY END テキスト */
+.scene-happy-end {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 60;
+}
+
+.scene-happy-end.hidden {
+  display: none;
+}
+
+.scene-happy-end h1 {
+  font-size: 42px;
+  color: #ffd700;
+  text-shadow:
+    0 0 30px rgba(255, 215, 0, 0.8),
+    0 0 60px rgba(255, 150, 0, 0.5),
+    0 4px 0 #b38600;
+  animation: happyEndPop 1s ease-out;
+  letter-spacing: 6px;
+  white-space: nowrap;
+}
+
+.scene-happy-end p {
+  font-size: 16px;
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 18px;
+  opacity: 0;
+  animation: happyEndSubFade 1s ease-out 0.8s forwards;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  letter-spacing: 3px;
+}
+
+@keyframes happyEndPop {
+  0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+  50% { transform: scale(1.3) rotate(3deg); opacity: 1; }
+  70% { transform: scale(0.95) rotate(-1deg); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes happyEndSubFade {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 0.9; transform: translateY(0); }
+}
+
+/* スキップボタン */
+.scene-skip {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.6);
+  padding: 6px 14px;
+  border-radius: 15px;
+  font-size: 12px;
+  cursor: pointer;
+  z-index: 100;
+  transition: all 0.2s;
+}
+
+.scene-skip:hover, .scene-skip:active {
+  background: rgba(255, 255, 255, 0.3);
+  color: #fff;
+}
+
+.scene-skip i {
+  margin-left: 4px;
+  margin-right: 0;
+}
+
+/* 花火エフェクト */
+.fireworks-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 55;
+}
+
+.firework {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+/* 花火の打ち上げ軌跡 */
+.firework-trail {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #fff;
+  animation: fireworkTrailUp 0.8s ease-out forwards;
+}
+
+@keyframes fireworkTrailUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-200px);
+  }
+}
+
+/* 花火の破裂パーティクル */
+.firework-particle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation: fireworkBurst 1.5s ease-out forwards;
+}
+
+@keyframes fireworkBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(var(--fx), var(--fy)) scale(0.2);
+  }
+}
+
+/* 花火のキラキラ余韻 */
+.firework-sparkle {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: #fff;
+  animation: fireworkSparkle 2s ease-out forwards;
+}
+
+@keyframes fireworkSparkle {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(0) translateY(40px); }
+}
