@@ -446,6 +446,7 @@ const Game = {
   // ゲーム開始
   startGame: function() {
     SoundSystem.gameStart();
+    SoundSystem.playBGM('title');
     this.showScreen('character');
   },
 
@@ -505,6 +506,7 @@ const Game = {
     this.enableWeapons(true);
 
     SoundSystem.battleStart();
+    SoundSystem.playBGM('battle');
     this.showScreen('battle');
   },
 
@@ -875,6 +877,7 @@ const Game = {
 
   // 敵を倒した
   enemyDefeated: function() {
+    SoundSystem.stopBGM();
     SoundSystem.enemyDefeated();
     GameState.earnedSkills.push(GameState.currentEnemy.skill);
 
@@ -906,6 +909,7 @@ const Game = {
 
   // ゲームオーバー
   gameOver: function() {
+    SoundSystem.stopBGM();
     SoundSystem.gameOver();
     this.showScreen('gameover');
   },
@@ -976,6 +980,7 @@ const Game = {
     document.getElementById('cta-message').innerHTML = present.ctaAdvice;
     document.getElementById('btn-main-cta').textContent = present.ctaText;
 
+    SoundSystem.stopBGM();
     SoundSystem.victory();
     this.showScreen('ending');
   },
@@ -1025,7 +1030,8 @@ const Game = {
 
   // ゲームリスタート
   restartGame: function() {
-    // パワーゲージを停止
+    // BGMとパワーゲージを停止
+    SoundSystem.stopBGM();
     this.stopPowerGauge();
 
     GameState.character = null;

@@ -399,10 +399,13 @@ body::after {
    ======================================== */
 #screen-battle {
   padding: 0;
-  display: flex;
-  flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+
+#screen-battle.active {
+  display: flex;
+  flex-direction: column;
 }
 
 /* バトルフィールド */
