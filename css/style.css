@@ -2591,7 +2591,7 @@ body::after {
 /* HAPPY END テキスト */
 .scene-happy-end {
   position: absolute;
-  top: 30%;
+  top: 18%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
@@ -2634,6 +2634,73 @@ body::after {
 @keyframes happyEndSubFade {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 0.9; transform: translateY(0); }
+}
+
+/* シーン内CTAエリア */
+.scene-cta {
+  position: absolute;
+  bottom: 22%;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 70;
+  width: 85%;
+  max-width: 360px;
+  opacity: 0;
+  animation: sceneCTAFadeIn 0.8s ease-out forwards;
+}
+
+.scene-cta.hidden {
+  display: none;
+}
+
+.scene-cta-msg {
+  color: #fff;
+  font-size: 13px;
+  margin-bottom: 10px;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.7);
+  line-height: 1.4;
+}
+
+.scene-cta-btn {
+  width: 100%;
+  padding: 14px 20px !important;
+  font-size: 17px !important;
+  font-weight: bold;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5);
+  animation: sceneCTAPulse 2s ease-in-out infinite;
+}
+
+.scene-cta-sub {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.scene-cta-sub-btn {
+  flex: 1;
+  padding: 8px 10px !important;
+  font-size: 12px !important;
+  border-radius: 8px !important;
+  background: rgba(255, 255, 255, 0.15) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.scene-cta-sub-btn:hover, .scene-cta-sub-btn:active {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: #fff !important;
+}
+
+@keyframes sceneCTAFadeIn {
+  0% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+  100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@keyframes sceneCTAPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(255, 215, 0, 0.5); }
+  50% { box-shadow: 0 4px 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 150, 0, 0.3); }
 }
 
 /* スキップボタン */

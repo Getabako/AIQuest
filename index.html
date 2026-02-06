@@ -267,6 +267,22 @@
           <p>そして冒険は続く...</p>
         </div>
 
+        <!-- CTAエリア（HAPPY END後に表示） -->
+        <div class="scene-cta hidden" id="scene-cta">
+          <p class="scene-cta-msg" id="scene-cta-message">「もっとAIを学んで、生活を変えてみませんか？」</p>
+          <button class="btn-primary scene-cta-btn" onclick="Game.goToConsultation()">
+            <i class="fa-solid fa-comments"></i> 無料で相談する
+          </button>
+          <div class="scene-cta-sub">
+            <button class="btn-secondary scene-cta-sub-btn" onclick="Game.shareResult()">
+              <i class="fa-solid fa-share-nodes"></i> シェア
+            </button>
+            <button class="btn-secondary scene-cta-sub-btn" onclick="Game.restartGame()">
+              <i class="fa-solid fa-rotate-right"></i> もう一度
+            </button>
+          </div>
+        </div>
+
         <!-- スキップボタン -->
         <button class="scene-skip" onclick="Game.skipEndingScene()">SKIP <i class="fa-solid fa-forward"></i></button>
       </div>

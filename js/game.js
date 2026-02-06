@@ -947,6 +947,12 @@ const Game = {
     hearts.innerHTML = '';
     fireworks.innerHTML = '';
 
+    // CTAリセット
+    var ctaEl = document.getElementById('scene-cta');
+    if (ctaEl) ctaEl.classList.add('hidden');
+    var skipBtn = document.querySelector('.scene-skip');
+    if (skipBtn) skipBtn.style.display = '';
+
     // 前のタイマーをクリア
     this._sceneTimeouts.forEach(clearTimeout);
     this._sceneTimeouts = [];
@@ -1038,10 +1044,9 @@ const Game = {
       self._startFireworks();
     });
 
-    // 結果画面へ遷移
-    t(happyEndDelay + 5000, function() {
-      self._stopFireworks();
-      self.showEnding();
+    // CTAボタンを表示（HAPPY END 2.5秒後）
+    t(happyEndDelay + 2500, function() {
+      self._showSceneCTA();
     });
   },
 
@@ -1050,8 +1055,27 @@ const Game = {
     this._sceneTimeouts = [];
     if (this._typewriterId) clearInterval(this._typewriterId);
     this._stopFireworks();
-    SoundSystem.stopBGM();
-    this.showEnding();
+
+    // スキップ時はすぐにHAPPY END + CTAを表示
+    var dialog = document.getElementById('scene-dialog');
+    var happyEnd = document.getElementById('scene-happy-end');
+    dialog.classList.add('hidden');
+    happyEnd.classList.remove('hidden');
+    this._showSceneCTA();
+  },
+
+  _showSceneCTA: function() {
+    var ctaEl = document.getElementById('scene-cta');
+    var skipBtn = document.querySelector('.scene-skip');
+    if (ctaEl) ctaEl.classList.remove('hidden');
+    if (skipBtn) skipBtn.style.display = 'none';
+
+    // CTAメッセージをキャラクター別に設定
+    var present = GameData.presents[GameState.character];
+    var ctaMsg = document.getElementById('scene-cta-message');
+    if (ctaMsg && present) {
+      ctaMsg.innerHTML = present.ctaAdvice;
+    }
   },
 
   _showSceneDialog: function(name, text) {
