@@ -2458,7 +2458,7 @@ body::after {
 }
 
 .scene-princess-char.walk-in img {
-  animation: sceneCharBounce 0.5s ease-in-out infinite;
+  animation: sceneCharWalk 0.35s ease-in-out infinite;
 }
 
 .scene-princess-char.close {
@@ -2477,7 +2477,7 @@ body::after {
 }
 
 .scene-hero-char.walk-in img {
-  animation: sceneCharBounce 0.5s ease-in-out infinite 0.25s;
+  animation: sceneCharWalk 0.35s ease-in-out infinite 0.15s;
 }
 
 .scene-hero-char.close {
@@ -2485,20 +2485,17 @@ body::after {
   transition: right 1.2s ease-out;
 }
 
-@keyframes sceneCharBounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+/* 歩行アニメ（左右に揺れるだけ、浮かない） */
+@keyframes sceneCharWalk {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
 }
 
-/* 停止（着地） */
+/* 停止（着地）- 浮かさない */
 .scene-princess-char.idle img,
 .scene-hero-char.idle img {
-  animation: sceneCharIdle 3s ease-in-out infinite;
-}
-
-@keyframes sceneCharIdle {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
+  animation: none;
 }
 
 /* ハートエフェクト */
