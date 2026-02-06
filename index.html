@@ -272,66 +272,51 @@
       </div>
     </div>
 
-    <!-- エンディング画面 -->
+    <!-- エンディング画面（コンパクト版） -->
     <div id="screen-ending" class="screen">
-      <div class="ending-container">
-        <div class="ending-header">
+      <div class="end-compact">
+        <!-- ヘッダー -->
+        <div class="end-header">
           <h1><i class="fa-solid fa-crown"></i> クエストクリア！ <i class="fa-solid fa-crown"></i></h1>
         </div>
 
-        <!-- お姫様セクション -->
-        <div class="princess-section">
-          <img src="images/princess.png" alt="お姫様" class="princess-image">
-          <div class="princess-speech">
-            <p id="princess-message">
-              勇者よ、よくぞ闇を払ってくれました！<br>
-              AIの力を使いこなすあなたなら、<br>
-              日々の生活をもっと豊かにできます。
-            </p>
-          </div>
-        </div>
-
-        <div class="result-card">
-          <div class="hero-result">
-            <img src="images/hero-student.png" alt="勇者" id="result-hero-image">
-            <h2 id="result-title"><i class="fa-solid fa-medal"></i> AI活用マスター</h2>
-          </div>
-
-          <!-- スコア＆ランキング表示 -->
-          <div id="score-display" class="score-display">
-            <!-- JSで生成 -->
-          </div>
-
-          <div class="skills-earned">
-            <h3><i class="fa-solid fa-list-check"></i> 獲得したスキル</h3>
-            <div class="skills-list" id="skills-list">
-              <!-- JSで生成 -->
+        <!-- 結果サマリー -->
+        <div class="end-result">
+          <div class="end-hero-row">
+            <img src="images/hero-student.png" alt="勇者" id="result-hero-image" class="end-hero-img">
+            <div class="end-hero-info">
+              <h2 id="result-title">AI活用マスター</h2>
+              <div id="score-display" class="end-score"></div>
             </div>
           </div>
-        </div>
-
-        <div class="present-box">
-          <h3><i class="fa-solid fa-gift"></i> 姫からの特典 <i class="fa-solid fa-gift"></i></h3>
-          <p id="present-description">クリア記念！初回相談が無料に！</p>
-          <div class="coupon-code" id="coupon-code">
-            AIQUEST2024
+          <div class="end-skills">
+            <span class="end-skills-label"><i class="fa-solid fa-list-check"></i> スキル</span>
+            <div class="end-skills-list" id="skills-list"></div>
           </div>
-          <p class="present-note">※相談申し込み時にこのコードをお伝えください</p>
         </div>
 
-        <div class="princess-cta">
-          <p id="cta-message" class="princess-advice">
-            「もっとAIを学んで、生活を変えてみませんか？」
-          </p>
-          <button class="btn-primary btn-cta" id="btn-main-cta" onclick="Game.goToConsultation()">
+        <!-- 特典 -->
+        <div class="end-present">
+          <div class="end-present-title"><i class="fa-solid fa-gift"></i> 姫からの特典</div>
+          <p id="present-description" class="end-present-desc">クリア記念！初回相談が無料に！</p>
+          <div class="end-coupon" id="coupon-code">AIQUEST2024</div>
+          <p class="end-present-note">※相談申し込み時にこのコードをお伝えください</p>
+        </div>
+
+        <!-- CTA -->
+        <div class="end-cta">
+          <p id="cta-message" class="end-cta-msg">「もっとAIを学んで、生活を変えてみませんか？」</p>
+          <button class="btn-primary end-btn-main" id="btn-main-cta" onclick="Game.goToConsultation()">
             <i class="fa-solid fa-comments"></i> 無料で相談する
           </button>
-          <button class="btn-secondary" onclick="Game.shareResult()">
-            <i class="fa-solid fa-share-nodes"></i> 結果をシェアする
-          </button>
-          <button class="btn-secondary" onclick="Game.restartGame()">
-            <i class="fa-solid fa-rotate-right"></i> もう一度遊ぶ
-          </button>
+          <div class="end-btn-row">
+            <button class="btn-secondary end-btn-sub" onclick="Game.shareResult()">
+              <i class="fa-solid fa-share-nodes"></i> シェア
+            </button>
+            <button class="btn-secondary end-btn-sub" onclick="Game.restartGame()">
+              <i class="fa-solid fa-rotate-right"></i> もう一度
+            </button>
+          </div>
         </div>
       </div>
     </div>

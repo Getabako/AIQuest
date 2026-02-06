@@ -1220,47 +1220,30 @@ const Game = {
 
     const skillsList = document.getElementById('skills-list');
     skillsList.innerHTML = GameState.earnedSkills.map(skill => `
-      <div class="skill-item">
+      <div class="end-skill-tag">
         <i class="fa-solid ${skill.icon}"></i>
         <span>${skill.name}</span>
       </div>
     `).join('');
 
-    // スコアとランキング表示
+    // スコアとランキング表示（コンパクト版）
     const rankResult = this.calculateRank();
     const scoreDisplay = document.getElementById('score-display');
     if (scoreDisplay) {
       const playTime = Math.floor((Date.now() - GameState.gameStartTime) / 1000);
       scoreDisplay.innerHTML = `
-        <div class="rank-badge" style="background: ${rankResult.color}">
-          <span class="rank-letter">${rankResult.rank}</span>
+        <div class="end-rank-row">
+          <div class="end-rank-badge" style="background: ${rankResult.color}">
+            ${rankResult.rank}
+          </div>
+          <span class="end-rank-msg">${rankResult.message}</span>
         </div>
-        <div class="rank-message">${rankResult.message}</div>
-        <div class="score-details">
-          <div class="score-item">
-            <span class="score-label">総スコア</span>
-            <span class="score-value">${GameState.score.total.toLocaleString()}</span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">最大コンボ</span>
-            <span class="score-value">${GameState.combo.maxCombo}</span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">パーフェクト</span>
-            <span class="score-value">${GameState.score.perfectHits}</span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">クリティカル</span>
-            <span class="score-value">${GameState.score.criticalHits}</span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">総ダメージ</span>
-            <span class="score-value">${GameState.score.damageDealt.toLocaleString()}</span>
-          </div>
-          <div class="score-item">
-            <span class="score-label">クリア時間</span>
-            <span class="score-value">${Math.floor(playTime / 60)}:${String(playTime % 60).padStart(2, '0')}</span>
-          </div>
+        <div class="end-score-grid">
+          <span>スコア<b>${GameState.score.total.toLocaleString()}</b></span>
+          <span>コンボ<b>${GameState.combo.maxCombo}</b></span>
+          <span>完璧<b>${GameState.score.perfectHits}</b></span>
+          <span>クリ<b>${GameState.score.criticalHits}</b></span>
+          <span>時間<b>${Math.floor(playTime / 60)}:${String(playTime % 60).padStart(2, '0')}</b></span>
         </div>
       `;
     }
