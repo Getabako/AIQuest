@@ -928,9 +928,9 @@ const Game = {
     SoundSystem.stopBGM();
     SoundSystem.playBGM('ending');
 
-    // 勇者画像設定
+    // 勇者画像設定（エンディング用フル画像）
     var heroImg = document.getElementById('scene-hero-img');
-    heroImg.src = GameState.character === 'student' ? 'images/hero-student.png' : 'images/hero-business.png';
+    heroImg.src = GameState.character === 'student' ? 'images/hero-student-full.png' : 'images/hero-business-full.png';
 
     // シーンリセット
     var princess = document.getElementById('scene-princess');
