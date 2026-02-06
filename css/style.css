@@ -2538,7 +2538,7 @@ body::after {
 /* ダイアログボックス */
 .scene-dialog {
   position: absolute;
-  bottom: 100px;
+  top: 15px;
   left: 15px;
   right: 15px;
   background: rgba(0, 0, 30, 0.92);
