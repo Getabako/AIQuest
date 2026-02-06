@@ -1285,17 +1285,23 @@ const Game = {
   },
 
   // メッセージ送信してLIFF閉じる
-  sendMessageAndClose: function(message) {
-    if (GameState.liffInitialized && liff.isInClient()) {
-      liff.sendMessages([{ type: 'text', text: message }])
-        .then(() => liff.closeWindow())
-        .catch((error) => {
-          console.error('Send message error:', error);
-          alert('トーク画面から「' + message + '」と送信してください。');
-        });
-    } else {
-      alert('LINEアプリから「' + message + '」と送信してください！');
+  sendMessageAndClose: async function(message) {
+    try {
+      // LIFF未初期化なら再初期化を試みる
+      if (!GameState.liffInitialized) {
+        await liff.init({ liffId: LIFF_ID });
+        GameState.liffInitialized = true;
+      }
+      if (liff.isInClient()) {
+        await liff.sendMessages([{ type: 'text', text: message }]);
+        liff.closeWindow();
+        return;
+      }
+    } catch (error) {
+      console.error('LIFF sendMessage error:', error);
     }
+    // フォールバック：LINEアプリ外 or エラー時
+    alert('トーク画面から「' + message + '」と送信してください。');
   },
 
   // 相談へ誘導
