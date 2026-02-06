@@ -304,8 +304,8 @@ const Game = {
     }
   },
 
-  getPowerGaugeMultiplier: function() {
-    const value = GameState.powerGauge.value;
+  getPowerGaugeMultiplier: function(capturedValue) {
+    const value = capturedValue !== undefined ? capturedValue : GameState.powerGauge.value;
     // 45-55: Perfect (1.5x), 35-65: Good (1.2x), それ以外: Normal (1.0x)
     if (value >= 48 && value <= 52) return { multiplier: 2.0, rating: 'critical' };
     if (value >= 45 && value <= 55) return { multiplier: 1.5, rating: 'perfect' };
@@ -563,7 +563,10 @@ const Game = {
   attack: function(weaponType) {
     if (!GameState.isPlayerTurn) return;
 
-    // パワーゲージを停止して結果を取得
+    // ゲージ値を即座にキャプチャ（ラグ防止）
+    const capturedGaugeValue = GameState.powerGauge.value;
+
+    // パワーゲージを停止
     this.stopPowerGauge();
     this.enableWeapons(false);
     GameState.isPlayerTurn = false;
@@ -585,8 +588,8 @@ const Game = {
       this.resetCombo();
     }
 
-    // パワーゲージのボーナス
-    const powerResult = this.getPowerGaugeMultiplier();
+    // パワーゲージのボーナス（キャプチャした値を使用）
+    const powerResult = this.getPowerGaugeMultiplier(capturedGaugeValue);
     const powerMultiplier = powerResult.multiplier;
     const powerRating = powerResult.rating;
 
@@ -1211,8 +1214,6 @@ const Game = {
     const title = GameData.titles[charType];
     const present = GameData.presents[charType];
 
-    document.getElementById('princess-message').innerHTML = present.princessMessage;
-
     const heroImage = charType === 'student' ? 'images/hero-student.png' : 'images/hero-business.png';
     document.getElementById('result-hero-image').src = heroImage;
 
@@ -1252,7 +1253,7 @@ const Game = {
     document.getElementById('coupon-code').textContent = present.coupon;
 
     document.getElementById('cta-message').innerHTML = present.ctaAdvice;
-    document.getElementById('btn-main-cta').textContent = present.ctaText;
+    document.getElementById('btn-main-cta').innerHTML = '<i class="fa-solid fa-comments"></i> ' + present.ctaText;
 
     SoundSystem.stopBGM();
     SoundSystem.victory();
