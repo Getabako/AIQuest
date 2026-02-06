@@ -445,11 +445,13 @@ const Game = {
 
   // ゲーム開始
   startGame: function() {
+    SoundSystem.gameStart();
     this.showScreen('character');
   },
 
   // キャラクター選択
   selectCharacter: function(type) {
+    SoundSystem.select();
     GameState.character = type;
     GameState.currentStage = 1;
     GameState.earnedSkills = [];
@@ -502,6 +504,7 @@ const Game = {
     this.updateComboDisplay();
     this.enableWeapons(true);
 
+    SoundSystem.battleStart();
     this.showScreen('battle');
   },
 
@@ -657,6 +660,22 @@ const Game = {
 
     // 攻撃ヒットタイミング（0.3秒後）
     setTimeout(() => {
+      // 効果音
+      if (isCritical) {
+        SoundSystem.criticalHit();
+      } else if (effectiveness === 'effective') {
+        SoundSystem.effectiveHit();
+      } else if (effectiveness === 'weak') {
+        SoundSystem.weakHit();
+      } else {
+        SoundSystem.hit();
+      }
+
+      // コンボ音
+      if (GameState.combo.count >= 2) {
+        setTimeout(() => SoundSystem.combo(GameState.combo.count), 150);
+      }
+
       // 敵にヒットエフェクト
       enemySprite.classList.add('shake');
 
@@ -797,6 +816,13 @@ const Game = {
 
     // ヒットタイミング
     setTimeout(() => {
+      // 効果音
+      if (blocked) {
+        SoundSystem.guard();
+      } else {
+        SoundSystem.playerDamage();
+      }
+
       // プレイヤーにダメージ
       playerSprite.classList.add('hit');
 
@@ -849,6 +875,7 @@ const Game = {
 
   // 敵を倒した
   enemyDefeated: function() {
+    SoundSystem.enemyDefeated();
     GameState.earnedSkills.push(GameState.currentEnemy.skill);
 
     document.getElementById('defeated-enemy-image').src = GameState.currentEnemy.image;
@@ -861,11 +888,13 @@ const Game = {
       <span class="skill-name">${skillName}</span>
     `;
 
+    setTimeout(() => SoundSystem.skillGet(), 300);
     this.showScreen('stage-clear');
   },
 
   // 次のステージへ
   nextStage: function() {
+    SoundSystem.select();
     GameState.currentStage++;
 
     if (GameState.currentStage > 3) {
@@ -877,6 +906,7 @@ const Game = {
 
   // ゲームオーバー
   gameOver: function() {
+    SoundSystem.gameOver();
     this.showScreen('gameover');
   },
 
@@ -946,6 +976,7 @@ const Game = {
     document.getElementById('cta-message').innerHTML = present.ctaAdvice;
     document.getElementById('btn-main-cta').textContent = present.ctaText;
 
+    SoundSystem.victory();
     this.showScreen('ending');
   },
 
