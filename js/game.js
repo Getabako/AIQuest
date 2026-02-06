@@ -30,6 +30,11 @@ const GameData = {
         chatgpt: "ChatGPTは分からないことを即座に教えてくれる！「つまらない」は「わからない」から来ることが多いんだ。",
         automation: "自動化ツールで宿題の単純作業を減らせば、考える時間が増えるね。",
         image: "画像生成AIで教科書の内容を図解すると、理解しやすくなるよ！"
+      },
+      battleMsg: {
+        chatgpt: { effective: "ChatGPTに算数の解き方を聞いた！\n分かりやすい説明で勉強嫌いが吹き飛んだ！", weak: "", normal: "ChatGPTで調べ物をした！\nまずまずの効果だ" },
+        automation: { effective: "", weak: "", normal: "宿題のくり返し作業を自動化した！\n時間に余裕ができたぞ" },
+        image: { effective: "", weak: "キレイな絵を生成したが…\n勉強の悩みは解決しなかった…", normal: "" }
       }
     },
     {
@@ -45,6 +50,11 @@ const GameData = {
         chatgpt: "ChatGPTにタスクを整理してもらうと、何から手をつければいいか明確になるよ！",
         automation: "自動化で単純作業を減らせば、大事なことに集中できる時間が生まれる！",
         image: "画像生成AIでビジュアル化すると、複雑な概念も頭に入りやすい！"
+      },
+      battleMsg: {
+        chatgpt: { effective: "", weak: "ChatGPTに色々聞いたが…\n情報が多すぎてかえって気が散った…", normal: "" },
+        automation: { effective: "タスク管理を自動化した！\n「次にやること」が明確になり集中力UP！", weak: "", normal: "作業の一部を自動化した！\n少しスッキリしたぞ" },
+        image: { effective: "", weak: "", normal: "図やイメージを生成して整理した！\n少し集中できるようになった" }
       }
     },
     {
@@ -60,6 +70,11 @@ const GameData = {
         chatgpt: "ChatGPTに将来の選択肢を聞いてみよう！知らなかった道が見つかるかも。",
         automation: "AIを使いこなせる人材は、これからの時代に超重要！今のうちに触れておこう。",
         image: "画像生成AIで「理想の自分」を描いてみて！想像が形になる体験は、将来への第一歩だよ。"
+      },
+      battleMsg: {
+        chatgpt: { effective: "", weak: "", normal: "ChatGPTに将来の選択肢を聞いた！\n少し視野が広がったぞ" },
+        automation: { effective: "", weak: "作業を自動化してみたが…\n将来の不安は消えなかった…", normal: "" },
+        image: { effective: "画像生成AIで「理想の未来」を描いた！\nイメージが形になり不安が希望に変わった！", weak: "", normal: "" }
       }
     }
   ],
@@ -79,6 +94,11 @@ const GameData = {
         chatgpt: "ChatGPTでメール対応や書類作成を効率化！1人で2人分の仕事ができるようになる。",
         automation: "Make.comやZapierで作業を自動化すれば、人を雇わなくても業務が回る！",
         image: "画像生成AIでデザイン作業を時短！デザイナーに頼まなくても資料が作れる。"
+      },
+      battleMsg: {
+        chatgpt: { effective: "", weak: "", normal: "ChatGPTにメール対応を任せた！\n1人で2人分の仕事ができるぞ" },
+        automation: { effective: "受注処理と請求書発行を自動化した！\n人を雇わなくても業務が回り出した！", weak: "", normal: "" },
+        image: { effective: "", weak: "素敵なイラストを生成したが…\n人手不足は解決しなかった…", normal: "" }
       }
     },
     {
@@ -94,6 +114,11 @@ const GameData = {
         chatgpt: "ChatGPTに議事録作成、メール文面、企画書のドラフトを任せれば、時間が大幅に短縮！",
         automation: "請求書発行、データ入力、レポート作成...自動化できる作業は思った以上に多い！",
         image: "プレゼン資料のイメージ画像を画像生成AIで作れば、素材探しの時間がゼロに！"
+      },
+      battleMsg: {
+        chatgpt: { effective: "議事録・メール・企画書をChatGPTに任せた！\n残業時間が激減した！", weak: "", normal: "" },
+        automation: { effective: "", weak: "自動化を試みたが設定に時間がかかり…\nかえって時間を取られてしまった…", normal: "" },
+        image: { effective: "", weak: "", normal: "プレゼン画像をAIで生成した！\n素材探しの時間がゼロになったぞ" }
       }
     },
     {
@@ -109,6 +134,11 @@ const GameData = {
         chatgpt: "ChatGPTに業務フローを説明して改善案をもらおう！客観的な視点が得られる。",
         automation: "まずは小さな自動化から！成功体験を積み重ねることが大切。",
         image: "新しい業務フローを画像生成AIで可視化！チームへの説明もスムーズに。"
+      },
+      battleMsg: {
+        chatgpt: { effective: "", weak: "ChatGPTに聞いたが情報が多すぎて…\n何から変えればいいか余計迷った…", normal: "" },
+        automation: { effective: "", weak: "", normal: "小さな自動化を導入した！\n少しずつ効率が上がってきたぞ" },
+        image: { effective: "新しい業務フローを図で可視化した！\nチーム全員が改善点を理解できた！", weak: "", normal: "" }
       }
     }
   ],
@@ -224,7 +254,13 @@ const GameState = {
   },
   shuffledWeapons: [],
   enemyNextAction: null,
-  gameStartTime: null
+  gameStartTime: null,
+  // 武器使用統計
+  weaponStats: {
+    chatgpt: { effective: 0, normal: 0, weak: 0 },
+    automation: { effective: 0, normal: 0, weak: 0 },
+    image: { effective: 0, normal: 0, weak: 0 }
+  }
 };
 
 // ========================================
@@ -232,18 +268,19 @@ const GameState = {
 // ========================================
 const Game = {
   // 初期化
-  init: async function() {
-    try {
-      await liff.init({ liffId: LIFF_ID });
+  init: function() {
+    this.showScreen('title');
+    // LIFF初期化はバックグラウンドで行う（画面遷移しない）
+    liff.init({ liffId: LIFF_ID }).then(function() {
       GameState.liffInitialized = true;
       if (liff.isLoggedIn()) {
-        const profile = await liff.getProfile();
-        GameState.userId = profile.userId;
+        return liff.getProfile().then(function(profile) {
+          GameState.userId = profile.userId;
+        });
       }
-    } catch (error) {
+    }).catch(function(error) {
       console.log("LIFF init error:", error);
-    }
-    this.showScreen('title');
+    });
   },
 
   // ========================================
@@ -466,6 +503,11 @@ const Game = {
     GameState.score.perfectHits = 0;
     GameState.score.criticalHits = 0;
     GameState.gameStartTime = Date.now();
+    GameState.weaponStats = {
+      chatgpt: { effective: 0, normal: 0, weak: 0 },
+      automation: { effective: 0, normal: 0, weak: 0 },
+      image: { effective: 0, normal: 0, weak: 0 }
+    };
 
     if (type === 'student') {
       GameState.enemies = JSON.parse(JSON.stringify(GameData.studentEnemies));
@@ -588,6 +630,9 @@ const Game = {
       this.resetCombo();
     }
 
+    // 武器使用統計を記録
+    GameState.weaponStats[weaponType][effectiveness]++;
+
     // パワーゲージのボーナス（キャプチャした値を使用）
     const powerResult = this.getPowerGaugeMultiplier(capturedGaugeValue);
     const powerMultiplier = powerResult.multiplier;
@@ -643,19 +688,25 @@ const Game = {
     const enemySprite = document.getElementById('enemy-image');
     const enemyEffect = document.getElementById('enemy-effect');
 
-    // メッセージ表示
+    // 教育的メッセージ表示
     let msgClass = '';
-    let msgText = `${GameData.weapons[GameState.lastAttack.weapon].name}で攻撃！`;
+    const weaponType = GameState.lastAttack.weapon;
+    const enemy = GameState.currentEnemy;
+    const battleMsg = enemy.battleMsg && enemy.battleMsg[weaponType];
+    let msgText = '';
 
     if (isCritical) {
       msgClass = 'critical';
-      msgText = 'CRITICAL HIT！！';
+      msgText = (battleMsg && battleMsg.effective) || 'CRITICAL HIT！！';
     } else if (effectiveness === 'effective') {
       msgClass = 'effective';
-      msgText = '効果は抜群だ！';
+      msgText = (battleMsg && battleMsg.effective) || '効果は抜群だ！';
     } else if (effectiveness === 'weak') {
       msgClass = 'weak';
-      msgText = '効果はイマイチ...';
+      msgText = (battleMsg && battleMsg.weak) || '効果はイマイチ...';
+    } else {
+      msgClass = '';
+      msgText = (battleMsg && battleMsg.normal) || `${GameData.weapons[weaponType].name}で攻撃！`;
     }
 
     this.updateBattleMessage(msgText, msgClass);
@@ -947,9 +998,11 @@ const Game = {
     hearts.innerHTML = '';
     fireworks.innerHTML = '';
 
-    // CTAリセット
+    // CTA・診断リセット
     var ctaEl = document.getElementById('scene-cta');
     if (ctaEl) ctaEl.classList.add('hidden');
+    var diagEl = document.getElementById('scene-diagnosis');
+    if (diagEl) diagEl.classList.add('hidden');
     var skipBtn = document.querySelector('.scene-skip');
     if (skipBtn) skipBtn.style.display = '';
 
@@ -1065,17 +1118,94 @@ const Game = {
   },
 
   _showSceneCTA: function() {
-    var ctaEl = document.getElementById('scene-cta');
     var skipBtn = document.querySelector('.scene-skip');
-    if (ctaEl) ctaEl.classList.remove('hidden');
     if (skipBtn) skipBtn.style.display = 'none';
 
-    // CTAメッセージをキャラクター別に設定
-    var present = GameData.presents[GameState.character];
-    var ctaMsg = document.getElementById('scene-cta-message');
-    if (ctaMsg && present) {
-      ctaMsg.innerHTML = present.ctaAdvice;
+    // AI診断結果を表示
+    var diagEl = document.getElementById('scene-diagnosis');
+    if (diagEl) {
+      this._buildDiagnosis();
+      diagEl.classList.remove('hidden');
     }
+
+    // 診断の0.8秒後にCTAボタン表示
+    var self = this;
+    setTimeout(function() {
+      var ctaEl = document.getElementById('scene-cta');
+      if (ctaEl) ctaEl.classList.remove('hidden');
+
+      var present = GameData.presents[GameState.character];
+      var ctaMsg = document.getElementById('scene-cta-message');
+      if (ctaMsg && present) {
+        ctaMsg.innerHTML = present.ctaAdvice;
+      }
+    }, 800);
+  },
+
+  _buildDiagnosis: function() {
+    var content = document.getElementById('diagnosis-content');
+    if (!content) return;
+
+    var stats = GameState.weaponStats;
+    var weapons = [
+      { key: 'chatgpt', name: 'ChatGPT', icon: 'fa-comment-dots' },
+      { key: 'automation', name: '自動化', icon: 'fa-gears' },
+      { key: 'image', name: '画像生成', icon: 'fa-palette' }
+    ];
+
+    // 各武器のスコアを計算（effective=3, normal=1, weak=-1）
+    var results = weapons.map(function(w) {
+      var s = stats[w.key];
+      var total = s.effective + s.normal + s.weak;
+      var score = total > 0 ? (s.effective * 3 + s.normal * 1 + s.weak * -1) / total : 0;
+      var pct = Math.min(100, Math.max(10, Math.round((score + 1) / 4 * 100)));
+      var grade, gradeClass;
+      if (s.effective > 0 && s.effective >= s.weak) { grade = '得意'; gradeClass = 'good'; }
+      else if (s.weak > s.effective) { grade = '苦手'; gradeClass = 'weak'; }
+      else { grade = 'ふつう'; gradeClass = 'ok'; }
+      return { key: w.key, name: w.name, icon: w.icon, score: score, pct: pct, grade: grade, gradeClass: gradeClass, stats: s };
+    });
+
+    // 得意・苦手を特定
+    var best = results.reduce(function(a, b) { return a.score >= b.score ? a : b; });
+    var worst = results.reduce(function(a, b) { return a.score <= b.score ? a : b; });
+
+    // 提案メッセージ
+    var suggestions = {
+      student: {
+        chatgpt: 'ChatGPTを使えば、分からない問題もすぐに理解できます。質問力を磨けばもっと伸びますよ！',
+        automation: 'ルーチン作業の自動化で、考える時間を増やせます。プログラミングにも触れてみましょう！',
+        image: '画像生成AIで、アイデアを形にする力を身につけましょう。創作活動にも役立ちます！'
+      },
+      business: {
+        chatgpt: 'ChatGPTで文書作成・要約・アイデア出しを効率化できます。業務時間を大幅に短縮！',
+        automation: '業務フローの自動化で、人件費削減と生産性向上を同時に実現できます！',
+        image: '画像生成AIで、広告・プレゼン・SNS素材を内製化。デザインコストを削減できます！'
+      }
+    };
+
+    var charType = GameState.character;
+    var suggestionText = '';
+    if (worst.gradeClass === 'weak') {
+      suggestionText = '<span class="diagnosis-suggestion-title">💡 ' + worst.name + 'をもっと活用しよう！</span><br>' + suggestions[charType][worst.key];
+    } else {
+      suggestionText = '<span class="diagnosis-suggestion-title">💡 ' + best.name + 'が得意ですね！</span><br>' + suggestions[charType][best.key];
+    }
+
+    var html = '<div class="diagnosis-title">⚔ AI活用診断</div>';
+
+    results.forEach(function(r) {
+      html += '<div class="diagnosis-weapon">' +
+        '<span class="diagnosis-weapon-icon"><i class="fa-solid ' + r.icon + '"></i></span>' +
+        '<span class="diagnosis-weapon-name">' + r.name + '</span>' +
+        '<div class="diagnosis-weapon-bar"><div class="diagnosis-weapon-fill ' + r.gradeClass + '" style="width:' + r.pct + '%"></div></div>' +
+        '<span class="diagnosis-label ' + r.gradeClass + '">' + r.grade + '</span>' +
+        '</div>';
+    });
+
+    html += '<div class="diagnosis-suggestion">' + suggestionText + '</div>';
+
+    content.innerHTML = html;
   },
 
   _showSceneDialog: function(name, text) {

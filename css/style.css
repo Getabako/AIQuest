@@ -659,7 +659,8 @@ body::after {
   font-size: 13px;
   color: #fff;
   text-align: center;
-  white-space: nowrap;
+  white-space: pre-line;
+  line-height: 1.5;
 }
 
 .log-message.effective {
@@ -2631,6 +2632,110 @@ body::after {
 @keyframes happyEndSubFade {
   from { opacity: 0; transform: translateY(15px); }
   to { opacity: 0.9; transform: translateY(0); }
+}
+
+/* AI診断結果エリア */
+.scene-diagnosis {
+  position: absolute;
+  top: 32%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 88%;
+  max-width: 380px;
+  z-index: 70;
+  opacity: 0;
+  animation: sceneCTAFadeIn 0.8s ease-out forwards;
+}
+
+.scene-diagnosis.hidden {
+  display: none;
+}
+
+.diagnosis-content {
+  background: rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(255, 215, 0, 0.4);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.diagnosis-title {
+  color: #ffd700;
+  font-size: 13px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.diagnosis-weapon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.diagnosis-weapon:last-child {
+  border-bottom: none;
+}
+
+.diagnosis-weapon-icon {
+  font-size: 14px;
+  width: 22px;
+  text-align: center;
+}
+
+.diagnosis-weapon-name {
+  font-weight: bold;
+  min-width: 70px;
+}
+
+.diagnosis-weapon-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.diagnosis-weapon-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.diagnosis-weapon-fill.good { background: linear-gradient(90deg, #44ff44, #88ff88); }
+.diagnosis-weapon-fill.ok { background: linear-gradient(90deg, #ffdd44, #ffee88); }
+.diagnosis-weapon-fill.weak { background: linear-gradient(90deg, #ff6666, #ff9999); }
+
+.diagnosis-label {
+  font-size: 10px;
+  min-width: 28px;
+  text-align: right;
+}
+
+.diagnosis-label.good { color: #44ff44; }
+.diagnosis-label.ok { color: #ffdd44; }
+.diagnosis-label.weak { color: #ff9999; }
+
+.diagnosis-suggestion {
+  margin-top: 8px;
+  padding: 8px;
+  background: rgba(255, 215, 0, 0.1);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  font-size: 11px;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.95);
+}
+
+.diagnosis-suggestion-title {
+  color: #ffd700;
+  font-weight: bold;
+  font-size: 11px;
+  margin-bottom: 4px;
 }
 
 /* シーン内CTAエリア */
